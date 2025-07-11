@@ -8,6 +8,15 @@ framework:
     #esi: true
     #fragments: true
 
+    http_client:
+        scoped_clients:
+            auth_service.client:
+                base_uri: '%env(AUTH_SERVICE_BASE_URL)%'
+                timeout: '%env(AUTH_SERVICE_TIMEOUT)%'
+                headers:
+                    Accept: 'application/json'
+                    Content-Type: 'application/json'
+
 when@test:
     framework:
         test: true
