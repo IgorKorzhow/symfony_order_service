@@ -2,7 +2,6 @@
 
 namespace App\MessageHandler;
 
-use _PHPStan_ac6dae9b0\Nette\Neon\Exception;
 use App\Entity\Product;
 use App\Message\Product\ProductMessage;
 use App\Repository\ProductRepository;
