@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO;
+namespace App\Dto;
 
 use App\Entity\Product;
 use App\Validator\ExistsEntityByField;
@@ -8,7 +8,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 
-class BasketProduct extends AbstractValidationDto
+class BasketProductDto extends AbstractValidationDto
 {
     public function __construct(int|string $productId, int $count)
     {

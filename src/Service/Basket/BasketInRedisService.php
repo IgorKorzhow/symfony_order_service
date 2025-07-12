@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Service\Basket;
 
-use App\DTO\Basket;
-use App\DTO\BasketProduct;
+use App\Dto\BasketDto;
+use App\Dto\BasketProductDto;
 use App\Exception\Basket\ProductDoesntExistsException;
 use Exception;
 use Psr\Cache\InvalidArgumentException;
@@ -23,18 +23,18 @@ final class BasketInRedisService implements BasketServiceInterface
     /**
      * @throws InvalidArgumentException
      */
-    public function getBasket(int|string $userId)
+    public function getBasket(int|string $userId): BasketDto
     {
         $basketKey = $this->getBasketKey($userId);
 
-        return $this->cache->get($basketKey, fn() => new Basket(userId: $userId), self::CACHE_TTL);
+        return $this->cache->get($basketKey, fn() => new BasketDto(userId: $userId), self::CACHE_TTL);
     }
 
     /**
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function addProduct(Basket $basket, BasketProduct $basketProduct): Basket
+    public function addProduct(BasketDto $basket, BasketProductDto $basketProduct): BasketDto
     {
         $userId = $basket->getUserId();
 
@@ -56,7 +56,7 @@ final class BasketInRedisService implements BasketServiceInterface
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function updateProduct(Basket $basket, BasketProduct $basketProduct): Basket
+    public function updateProduct(BasketDto $basket, BasketProductDto $basketProduct): BasketDto
     {
         $userId = $basket->getUserId();
 
@@ -77,7 +77,7 @@ final class BasketInRedisService implements BasketServiceInterface
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function deleteProduct(Basket $basket, BasketProduct $basketProduct): Basket
+    public function deleteProduct(BasketDto $basket, BasketProductDto $basketProduct): BasketDto
     {
         $userId = $basket->getUserId();
 
@@ -98,7 +98,7 @@ final class BasketInRedisService implements BasketServiceInterface
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function changeProduct(Basket $basket, BasketProduct $basketProduct): Basket
+    public function changeProduct(BasketDto $basket, BasketProductDto $basketProduct): BasketDto
     {
         $userId = $basket->getUserId();
 

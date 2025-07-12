@@ -2,18 +2,18 @@
 
 namespace App\Repository;
 
-use App\DTO\Basket;
+use App\Dto\BasketDto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Basket>
+ * @extends ServiceEntityRepository<BasketDto>
  */
 class BasketRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Basket::class);
+        parent::__construct($registry, BasketDto::class);
     }
 
 //    /**

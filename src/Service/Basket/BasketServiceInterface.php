@@ -2,18 +2,18 @@
 
 namespace App\Service\Basket;
 
-use App\DTO\Basket;
-use App\DTO\BasketProduct;
+use App\Dto\BasketDto;
+use App\Dto\BasketProductDto;
 
 interface BasketServiceInterface
 {
-    public function getBasket(int|string $userId);
+    public function getBasket(int|string $userId): BasketDto;
 
-    public function addProduct(Basket $basket, BasketProduct $basketProduct): Basket;
+    public function addProduct(BasketDto $basket, BasketProductDto $basketProduct): BasketDto;
 
-    public function deleteProduct(Basket $basket, BasketProduct $basketProduct): Basket;
+    public function deleteProduct(BasketDto $basket, BasketProductDto $basketProduct): BasketDto;
 
-    public function updateProduct(Basket $basket, BasketProduct $basketProduct): Basket;
+    public function updateProduct(BasketDto $basket, BasketProductDto $basketProduct): BasketDto;
 
-    public function changeProduct(Basket $basket, BasketProduct $basketProduct): Basket;
+    public function changeProduct(BasketDto $basket, BasketProductDto $basketProduct): BasketDto;
 }

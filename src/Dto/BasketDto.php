@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\DTO;
+namespace App\Dto;
 
 use App\Exception\Basket\ProductAlreadyExistsException;
 use App\Exception\Basket\ProductDoesntExistsException;
@@ -9,7 +9,7 @@ use App\Exception\Basket\ProductPriceNotFoundException;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class Basket extends AbstractValidationDto
+class BasketDto extends AbstractValidationDto
 {
     public function __construct(int|string $userId, array $products = [], float $totalPrice = 0)
     {
@@ -23,8 +23,9 @@ class Basket extends AbstractValidationDto
     private int|string $userId;
 
     #[Assert\NotNull]
+    #[Assert\Valid]
     #[Groups(['json'])]
-    /** @var $products array<int, BasketProduct> */
+    /** @var BasketProductDto[] $products */
     private array $products;
 
     #[Assert\NotNull, Assert\Positive]
@@ -56,11 +57,11 @@ class Basket extends AbstractValidationDto
      * @throws ProductAlreadyExistsException
      * @throws ProductPriceNotFoundException
      */
-    public function addProduct(BasketProduct $basketProduct): Basket
+    public function addProduct(BasketProductDto $basketProduct): BasketDto
     {
         $product = array_find(
             $this->products,
-            fn(BasketProduct $product) => $product->getProductId() === $basketProduct->getProductId()
+            fn(BasketProductDto $product) => $product->getProductId() === $basketProduct->getProductId()
         );
 
         if (isset($product)) {
@@ -81,13 +82,13 @@ class Basket extends AbstractValidationDto
         return $this;
     }
 
-    public function deleteProduct(BasketProduct $basketProduct): Basket
+    public function deleteProduct(BasketProductDto $basketProduct): BasketDto
     {
         $this->totalPrice -= $basketProduct->getCount() * $basketProduct->getPrice();
 
         $this->products = array_filter(
             $this->getProducts(),
-            fn(BasketProduct $savedProduct) => $savedProduct->getProductId() === $basketProduct->getProductId()
+            fn(BasketProductDto $savedProduct) => $savedProduct->getProductId() === $basketProduct->getProductId()
         );
 
         return $this;
@@ -97,11 +98,11 @@ class Basket extends AbstractValidationDto
      * @throws ProductDoesntExistsException
      * @throws ProductAlreadyExistsException
      */
-    public function changeProduct(BasketProduct $basketProduct): Basket
+    public function changeProduct(BasketProductDto $basketProduct): BasketDto
     {
         $productIdx = array_find_key(
             $this->getProducts(),
-            fn(BasketProduct $product) => $product->getProductId() === $basketProduct->getProductId()
+            fn(BasketProductDto $product) => $product->getProductId() === $basketProduct->getProductId()
         );
 
         if (!isset($productIdx)) {
@@ -120,11 +121,11 @@ class Basket extends AbstractValidationDto
      * @throws ProductDoesntExistsException
      * @throws ProductPriceNotFoundException
      */
-    public function updateProduct(BasketProduct $basketProduct): Basket
+    public function updateProduct(BasketProductDto $basketProduct): BasketDto
     {
         $productIdx = array_find_key(
             $this->products,
-            fn(BasketProduct $product) => $product->getProductId() === $basketProduct->getProductId()
+            fn(BasketProductDto $product) => $product->getProductId() === $basketProduct->getProductId()
         );
 
         $this->totalPrice -= $this->products[$productIdx]->getCount() * $this->products[$productIdx]->getPrice();

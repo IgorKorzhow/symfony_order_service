@@ -10,7 +10,7 @@ framework:
             # sync: 'sync://'
 
             kafka_product_consumer:
-                failure_transport: failed
+                # failure_transport: failed
                 dsn: '%env(KAFKA_URL)%'
                 serializer: App\Serializer\ProductMessageSerializer
                 options:

@@ -2,10 +2,13 @@
 
 namespace App\Entity;
 
+use App\Enum\DeliveryTypeEnum;
+use App\Enum\OrderStatusEnum;
 use App\Repository\OrderRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
@@ -26,10 +29,20 @@ class Order
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order', cascade: ['persist'], orphanRemoval: true)]
     private Collection $orderItems;
 
+    #[ORM\Column(type: Types::STRING, length: 40)]
+    private OrderStatusEnum $orderStatus;
+
+    #[ORM\Column(type: Types::STRING, length: 40)]
+    private DeliveryTypeEnum $deliveryType;
+
+    #[ORM\Column]
+    private int|string $userId;
+
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
         $this->createdAt = new DateTimeImmutable();
+        $this->orderStatus = OrderStatusEnum::CREATED;
     }
 
     public function getId(): ?int
@@ -61,6 +74,36 @@ class Order
         return $this->orderItems;
     }
 
+    public function getDeliveryType(): DeliveryTypeEnum
+    {
+        return $this->deliveryType;
+    }
+
+    public function setDeliveryType(DeliveryTypeEnum $deliveryType): void
+    {
+        $this->deliveryType = $deliveryType;
+    }
+
+    public function getOrderStatus(): OrderStatusEnum
+    {
+        return $this->orderStatus;
+    }
+
+    public function setOrderStatus(OrderStatusEnum $orderStatus): void
+    {
+        $this->orderStatus = $orderStatus;
+    }
+
+    public function getUserId(): int|string
+    {
+        return $this->userId;
+    }
+
+    public function setUserId(int|string $userId): void
+    {
+        $this->userId = $userId;
+    }
+
     public function addOrderItem(OrderItem $item): self
     {
         if (!$this->orderItems->contains($item)) {
@@ -80,4 +123,5 @@ class Order
         }
 
         return $this;
-    }}
+    }
+}

@@ -1,8 +1,9 @@
 <?php
 
-namespace App\DTO;
+namespace App\Dto;
 
 use App\Exception\DtoValidationException;
+use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -15,11 +16,19 @@ abstract class AbstractValidationDto
         ValidatorInterface $validator,
     ): void
     {
+
         $errors = $validator->validate($this);
+
+        $errors->addAll($this->extendValidation());
 
         if (count($errors) > 0) {
             throw new DtoValidationException($this->formatErrors($errors));
         }
+    }
+
+    protected function extendValidation(): ConstraintViolationListInterface
+    {
+        return new ConstraintViolationList();
     }
 
     protected function formatErrors(ConstraintViolationListInterface $errors): array

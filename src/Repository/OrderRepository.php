@@ -29,6 +29,14 @@ class OrderRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function store(Order $order): Order
+    {
+        $this->getEntityManager()->persist($order);
+        $this->getEntityManager()->flush();
+
+        return $order;
+    }
+
 
     //    /**
     //     * @return Order[] Returns an array of Order objects

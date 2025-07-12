@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\DTO\BasketProduct;
+use App\Dto\BasketProductDto;
 use App\Exception\DtoValidationException;
 use App\Repository\ProductRepository;
 use App\Service\Basket\BasketServiceInterface;
@@ -41,7 +41,7 @@ final class BasketController extends AbstractController
      * @throws DtoValidationException
      */
     #[Route('/bucket/products/change', name: 'basket_products_change', methods: ['PATCH'])]
-    public function changeProduct(BasketProduct $basketProduct): JsonResponse
+    public function changeProduct(BasketProductDto $basketProduct): JsonResponse
     {
         $basketProduct->validate($this->validator);
 
