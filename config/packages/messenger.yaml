@@ -34,6 +34,32 @@ framework:
                     max_retries: 3
                     delay: 1000
 
+            kafka_change_order_status_consumer:
+                # failure_transport: failed
+                dsn: '%env(KAFKA_URL)%'
+                serializer: App\Serializer\ChangeOrderStatusMessageSerializer
+                options:
+                    commitAsync: true
+                    receiveTimeout: 10000
+                    topic:
+                        name: "order"
+                    kafka_conf:
+                        enable.auto.offset.store: 'false'
+                        group.id: 'my-group-id' # should be unique per consumer
+                        'metadata.broker.list': '%env(KAFKA_BROKER_LIST)%'
+                        #                        security.protocol: 'sasl_ssl'
+                        #                        ssl.ca.location: '%kernel.project_dir%/config/kafka/ca.pem'
+                        #                        sasl.username: '%env(KAFKA_SASL_USERNAME)%'
+                        #                        sasl.password: '%env(KAFKA_SASL_PASSWORD)%'
+                        #                        sasl.mechanisms: 'SCRAM-SHA-256'
+                        max.poll.interval.ms: '45000'
+                    topic_conf:
+                        auto.offset.reset: 'earliest'
+                retry_strategy:
+                    max_retries: 3
+                    delay: 1000
+
+
         routing:
             # Route your messages to the transports
             # 'App\Message\YourMessage': async

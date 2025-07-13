@@ -2,11 +2,16 @@
 
 namespace App\Enum;
 
-use App\Exception\UnknownEnumTypeException;
-use ValueError;
+use App\Enum\Interfaces\TypeByStringInterface;
+use App\Enum\Interfaces\ValuesInterface;
+use App\Enum\Traits\TypeByStringTrait;
+use App\Enum\Traits\ValuesTrait;
 
 enum OrderStatusEnum: string implements TypeByStringInterface, ValuesInterface
 {
+    use TypeByStringTrait;
+    use ValuesTrait;
+
     case CREATED = 'created';
 
     case PAYED = 'payed';
@@ -23,29 +28,12 @@ enum OrderStatusEnum: string implements TypeByStringInterface, ValuesInterface
 
     case CANCELLED = 'cancelled';
 
-    /**
-     * @throws UnknownEnumTypeException
-     */
-    public static function typeByString(string $type): OrderStatusEnum
-    {
-        try {
-            return self::from($type);
-        } catch (ValueError) {
-            throw new UnknownEnumTypeException('Unknown enum type: ' . $type . ' for enum: ' . self::class);
-        }
-    }
-
     public static function hasValue(string $type): bool
     {
         try {
             return (bool) self::from($type);
-        } catch (ValueError) {
+        } catch (\ValueError) {
             return false;
         }
-    }
-
-    public static function values(): array
-    {
-        return array_column(self::cases(), 'value');
     }
 }

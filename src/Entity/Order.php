@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Enum\DeliveryTypeEnum;
 use App\Enum\OrderStatusEnum;
 use App\Repository\OrderRepository;
-use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -21,7 +20,10 @@ class Order
     private ?int $id = null;
 
     #[ORM\Column]
-    private DateTimeImmutable $createdAt;
+    private \DateTimeImmutable $createdAt;
+
+    #[ORM\Column]
+    private \DateTimeImmutable $payedAt;
 
     #[ORM\Column]
     private float $totalPrice = 0;
@@ -41,7 +43,7 @@ class Order
     public function __construct()
     {
         $this->orderItems = new ArrayCollection();
-        $this->createdAt = new DateTimeImmutable();
+        $this->createdAt = new \DateTimeImmutable();
         $this->orderStatus = OrderStatusEnum::CREATED;
     }
 
@@ -50,7 +52,7 @@ class Order
         return $this->id;
     }
 
-    public function getCreatedAt(): DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -63,6 +65,7 @@ class Order
     public function setTotalPrice(float $totalPrice): self
     {
         $this->totalPrice = $totalPrice;
+
         return $this;
     }
 
@@ -102,6 +105,18 @@ class Order
     public function setUserId(int|string $userId): void
     {
         $this->userId = $userId;
+    }
+
+    public function getPayedAt(): \DateTimeImmutable
+    {
+        return $this->payedAt;
+    }
+
+    public function setPayedAt(\DateTimeImmutable $updatedAt): static
+    {
+        $this->payedAt = $updatedAt;
+
+        return $this;
     }
 
     public function addOrderItem(OrderItem $item): self

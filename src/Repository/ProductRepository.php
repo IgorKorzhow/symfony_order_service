@@ -3,9 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Product;
+use App\Enum\OrderStatusEnum;
 use App\Service\Paginator\PaginatedListEntity;
 use App\Service\Paginator\PaginateQueryService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 
@@ -40,6 +42,24 @@ class ProductRepository extends ServiceEntityRepository
             ->orderBy('product.id', 'DESC');
 
         return $this->paginateQueryService->paginate($baseQuery);
+    }
+
+    public function getOrderedProductsInDatePeriodIterator(\DateTimeImmutable $dateFrom, \DateTimeImmutable $dateTo): iterable
+    {
+        $baseQuery = $this->createQueryBuilder('product')
+            ->innerJoin('product.orderItems', 'order_items')
+            ->addSelect('order_items')
+            ->innerJoin('order_items.order', 'order')
+            ->addSelect('order')
+            ->where('order.payedAt BETWEEN :dateFrom AND :dateTo')
+            ->andWhere('order.orderStatus != :status')
+            ->setParameter('dateFrom', $dateFrom->format('Y-m-d'))
+            ->setParameter('dateTo', $dateTo->format('Y-m-d'))
+            ->setParameter('status', OrderStatusEnum::CREATED->value)
+            ->getQuery();
+
+        return $baseQuery->toIterable();
+
     }
 
     //    /**

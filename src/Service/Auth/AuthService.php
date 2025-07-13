@@ -4,7 +4,6 @@ namespace App\Service\Auth;
 
 use App\Exception\AuthService\AuthServiceTransportException;
 use App\Exception\AuthService\AuthServiceUnauthorizedException;
-use Exception;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
@@ -21,8 +20,7 @@ final class AuthService
 
     public function __construct(
         private readonly HttpClientInterface $httpClient,
-    )
-    {
+    ) {
     }
 
     /**
@@ -30,7 +28,7 @@ final class AuthService
      * @throws RedirectionExceptionInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
-     * @throws Exception
+     * @throws \Exception
      */
     public function getUserByToken(string $token): ExternalAuthUser
     {
@@ -40,8 +38,8 @@ final class AuthService
                 url: self::URLS['getUser'],
                 options: [
                     'headers' => [
-                        'Authorization' => 'Bearer ' . $token,
-                    ]
+                        'Authorization' => 'Bearer '.$token,
+                    ],
                 ]
             );
 
@@ -50,7 +48,6 @@ final class AuthService
             }
 
             return new ExternalAuthUser($response->toArray());
-
         } catch (TransportExceptionInterface $e) {
             throw new AuthServiceTransportException(code: Response::HTTP_INTERNAL_SERVER_ERROR, previous: $e);
         }

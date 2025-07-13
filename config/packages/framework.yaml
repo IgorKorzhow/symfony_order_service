@@ -12,7 +12,7 @@ framework:
         scoped_clients:
             auth_service.client:
                 base_uri: '%env(AUTH_SERVICE_BASE_URL)%'
-                timeout: '%env(AUTH_SERVICE_TIMEOUT)%'
+                timeout: '%env(float:AUTH_SERVICE_TIMEOUT)%'
                 headers:
                     Accept: 'application/json'
                     Content-Type: 'application/json'

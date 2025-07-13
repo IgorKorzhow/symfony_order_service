@@ -7,11 +7,10 @@ use App\Enum\Interfaces\ValuesInterface;
 use App\Enum\Traits\TypeByStringTrait;
 use App\Enum\Traits\ValuesTrait;
 
-enum DeliveryTypeEnum: string implements TypeByStringInterface, ValuesInterface
+enum ReportTypeEnum: string implements TypeByStringInterface, ValuesInterface
 {
     use TypeByStringTrait;
     use ValuesTrait;
 
-    case COURIER = 'courier';
-    case PICKUP = 'pickup';
+    case ORDER_REPORT = 'order_report';
 }
