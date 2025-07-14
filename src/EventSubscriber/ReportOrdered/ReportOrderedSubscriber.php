@@ -2,9 +2,8 @@
 
 namespace App\EventSubscriber\ReportOrdered;
 
-use App\Event\ReportOrderedEvent;
+use App\Message\Report\ReportOrderedMessage;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Contracts\HttpClient\Exception\ClientExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\DecodingExceptionInterface;
 use Symfony\Contracts\HttpClient\Exception\RedirectionExceptionInterface;
@@ -14,7 +13,7 @@ class ReportOrderedSubscriber implements EventSubscriberInterface
 {
     public static function getSubscribedEvents(): array
     {
-        return [ReportOrderedEvent::class => [
+        return [ReportOrderedMessage::class => [
             ['onReportOrdered', 0],
         ],
         ];
@@ -26,7 +25,7 @@ class ReportOrderedSubscriber implements EventSubscriberInterface
      * @throws DecodingExceptionInterface
      * @throws ClientExceptionInterface
      */
-    public function onReportOrdered(ReportOrderedEvent $event): void
+    public function onReportOrdered(ReportOrderedMessage $event): void
     {
         $report = $event->getReport();
 

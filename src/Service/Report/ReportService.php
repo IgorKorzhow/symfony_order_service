@@ -4,20 +4,23 @@ namespace App\Service\Report;
 
 use App\Dto\ReportDto;
 use App\Entity\Report;
+use App\Entity\ReportDetail;
+use App\Enum\ReportStatusEnum;
 use App\Enum\ReportTypeEnum;
-use App\Event\ReportOrderedEvent;
 use App\Exception\UnknownEnumTypeException;
+use App\Message\Report\ReportOrderedMessage;
 use App\Repository\ReportRepository;
+use App\Service\Report\Generator\ReportGeneratorFactory;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class ReportService
+final readonly class ReportService
 {
     public function __construct(
-        private readonly MessageBusInterface $messageBus,
-        private readonly ReportRepository $reportRepository,
-    )
-    {
+        private MessageBusInterface $messageBus,
+        private ReportRepository $reportRepository,
+        private ReportGeneratorFactory $reportGeneratorFactory,
+    ) {
     }
 
     /**
@@ -34,10 +37,29 @@ class ReportService
 
         $this->reportRepository->store($report);
 
-        $this->messageBus->dispatch(new ReportOrderedEvent(
-            report: $report,
-            occurredOn: new \DateTimeImmutable()
+        $this->messageBus->dispatch(new ReportOrderedMessage(
+            reportId: $report->getId(),
         ));
+
+        return $report;
+    }
+
+    public function generateReport(Report $report): Report
+    {
+        try {
+            $reportGenerator = $this->reportGeneratorFactory->make($report->getReportType());
+
+            $report = $reportGenerator->generate($report);
+            $report->setStatus(ReportStatusEnum::SUCCESS);
+        } catch (\Throwable $e) {
+            $report->setStatus(ReportStatusEnum::ERROR);
+            $report->setDetail(new ReportDetail(
+                message: $e->getMessage(),
+                error: $e->getTraceAsString(),
+            ));
+        }
+
+        $this->reportRepository->flush();
 
         return $report;
     }

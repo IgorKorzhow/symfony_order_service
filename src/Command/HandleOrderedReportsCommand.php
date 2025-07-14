@@ -17,7 +17,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class HandleOrderedReportsCommand extends Command
 {
     public function __construct(
-        private readonly
+//        private readonly/
     )
     {
         parent::__construct();

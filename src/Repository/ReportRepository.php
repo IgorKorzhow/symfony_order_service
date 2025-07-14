@@ -24,6 +24,11 @@ class ReportRepository extends ServiceEntityRepository
         return $report;
     }
 
+    public function flush(): void
+    {
+        $this->getEntityManager()->flush();
+    }
+
     //    /**
     //     * @return Report[] Returns an array of Report objects
     //     */

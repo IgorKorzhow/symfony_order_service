@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Dto\ReportDto;
 use App\Entity\Report;
 use App\Exception\DtoValidationException;
+use App\Repository\ReportRepository;
 use App\Service\Report\ReportService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,6 +19,7 @@ final class ReportController extends AbstractController
         private readonly SerializerInterface $serializer,
         private readonly ValidatorInterface $validator,
         private readonly ReportService $reportService,
+        private readonly ReportRepository $reportRepository,
     )
     {
     }
@@ -32,6 +34,6 @@ final class ReportController extends AbstractController
 
         $report = $this->reportService->orderReportGeneration($reportDto);
 
-        return $this->json($this->serializer->serialize($report), Response::HTTP_CREATED);
+        return $this->json($this->serializer->serialize($report, 'json'), Response::HTTP_CREATED);
     }
 }

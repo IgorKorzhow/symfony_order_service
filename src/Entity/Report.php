@@ -7,16 +7,20 @@ use App\Enum\ReportTypeEnum;
 use App\Repository\ReportRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use PharIo\Manifest\Type;
+use Symfony\Bridge\Doctrine\IdGenerator\UuidGenerator;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Uid\Uuid;
 
 #[ORM\Entity(repositoryClass: ReportRepository::class)]
 class Report
 {
     #[ORM\Id]
-    #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(type: 'uuid', unique: true)]
+    #[ORM\GeneratedValue(strategy: 'CUSTOM')]
+    #[ORM\CustomIdGenerator(class: UuidGenerator::class)]
     #[Groups('json')]
-    private ?int $id = null;
+    private ?Uuid $id = null;
 
     #[ORM\Column(length: 50)]
     #[Groups('json')]
@@ -25,6 +29,10 @@ class Report
     #[ORM\Column(length: 50)]
     #[Groups('json')]
     private ReportStatusEnum $status;
+
+    #[ORM\Column(type: Types::JSON, nullable: true)]
+    #[Groups('json')]
+    private ReportDetail $detail;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups('json')]
@@ -47,12 +55,12 @@ class Report
         $this->createdAt = new \DateTimeImmutable();
     }
 
-    public function getId(): ?int
+    public function getId(): ?Uuid
     {
         return $this->id;
     }
 
-    public function setId(?int $id): static
+    public function setId(?Uuid $id): static
     {
         $this->id = $id;
 
@@ -124,10 +132,13 @@ class Report
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
+    public function getDetail(): ReportDetail
     {
-        $this->createdAt = $createdAt;
+        return $this->detail;
+    }
 
-        return $this;
+    public function setDetail(ReportDetail $detail): void
+    {
+        $this->detail = $detail;
     }
 }

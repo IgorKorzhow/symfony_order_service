@@ -4,13 +4,14 @@ namespace App\Factory;
 
 use App\Message\Product\Measurement;
 use App\Message\Product\ProductMessage;
-use InvalidArgumentException;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 readonly class ProductMessageFactory
 {
-    public function __construct(private ValidatorInterface $validator) {}
+    public function __construct(private ValidatorInterface $validator)
+    {
+    }
 
     public function fromArray(array $data): ProductMessage
     {
@@ -22,7 +23,7 @@ readonly class ProductMessageFactory
             description: $data['description'] ?? null,
             cost: $data['cost'],
             tax: $data['tax'],
-            version:  $data['version'],
+            version: $data['version'],
             measurements: new Measurement(
                 weight: $data['measurements']['weight'],
                 height: $data['measurements']['height'],
@@ -37,7 +38,7 @@ readonly class ProductMessageFactory
         $violations = $this->validator->validate($data, $this->validationConstraints());
 
         if (count($violations) > 0) {
-            throw new InvalidArgumentException((string) $violations);
+            throw new \InvalidArgumentException((string) $violations);
         }
     }
 
@@ -95,4 +96,3 @@ readonly class ProductMessageFactory
         ]);
     }
 }
-

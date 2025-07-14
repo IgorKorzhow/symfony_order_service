@@ -12,5 +12,5 @@ enum ReportTypeEnum: string implements TypeByStringInterface, ValuesInterface
     use TypeByStringTrait;
     use ValuesTrait;
 
-    case ORDER_REPORT = 'order_report';
+    case PRODUCT_CELLED_REPORT = 'product_celled_report';
 }

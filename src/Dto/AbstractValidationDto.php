@@ -14,9 +14,7 @@ abstract class AbstractValidationDto
      */
     public function validate(
         ValidatorInterface $validator,
-    ): void
-    {
-
+    ): void {
         $errors = $validator->validate($this);
 
         $errors->addAll($this->extendValidation());

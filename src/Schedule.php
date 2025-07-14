@@ -3,7 +3,7 @@
 namespace App;
 
 use App\Command\HandleOrderedReportsCommand;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Psr\Container\ContainerInterface;
 use Symfony\Component\Scheduler\Attribute\AsSchedule;
 use Symfony\Component\Scheduler\RecurringMessage;
 use Symfony\Component\Scheduler\Schedule as SymfonySchedule;

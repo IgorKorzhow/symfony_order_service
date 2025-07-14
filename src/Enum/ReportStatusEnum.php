@@ -13,6 +13,6 @@ enum ReportStatusEnum: string implements TypeByStringInterface, ValuesInterface
     use ValuesTrait;
 
     case CREATED = 'created';
-    case GENERATING = 'generating';
-    case GENERATED = 'generated';
+    case SUCCESS = 'success';
+    case ERROR = 'error';
 }
