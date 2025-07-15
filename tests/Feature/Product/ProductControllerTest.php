@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Controller;
+namespace App\Tests\Feature\Product;
 
 use App\Factory\Entity\ProductFactory;
 use App\Message\Product\Measurement;
