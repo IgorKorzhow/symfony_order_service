@@ -29,4 +29,8 @@ services:
         arguments:
             $container: '@service_container'
 
+    App\Service\Report\Generator\ReportGeneratorFactory:
+        arguments:
+            $container: '@service_container'
+
 

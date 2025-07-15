@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Dto\BasketDto;
+use App\Dto\Basket\BasketDto;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 

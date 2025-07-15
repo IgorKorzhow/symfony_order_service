@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Dto\Product\ProductQueryDto;
 use App\Entity\Product;
 use App\Enum\OrderStatusEnum;
 use App\Service\Paginator\PaginatedListEntity;
@@ -36,12 +37,12 @@ class ProductRepository extends ServiceEntityRepository
     /**
      * @throws Exception
      */
-    public function getPaginated(array $query): PaginatedListEntity
+    public function getPaginated(int $page, int $perPage): PaginatedListEntity
     {
         $baseQuery = $this->createQueryBuilder('product')
             ->orderBy('product.id', 'DESC');
 
-        return $this->paginateQueryService->paginate($baseQuery);
+        return $this->paginateQueryService->paginate($baseQuery, $page, $perPage);
     }
 
     public function getOrderedProductsInDatePeriodIterator(\DateTimeImmutable $dateFrom, \DateTimeImmutable $dateTo): iterable

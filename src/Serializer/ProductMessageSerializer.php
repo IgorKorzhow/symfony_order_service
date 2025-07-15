@@ -2,7 +2,7 @@
 
 namespace App\Serializer;
 
-use App\Factory\ProductMessageFactory;
+use App\Factory\Message\ProductMessageFactory;
 use App\Message\Product\ProductMessage;
 use InvalidArgumentException;
 use Symfony\Component\Messenger\Envelope;

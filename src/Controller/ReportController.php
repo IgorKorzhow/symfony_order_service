@@ -2,8 +2,7 @@
 
 namespace App\Controller;
 
-use App\Dto\ReportDto;
-use App\Entity\Report;
+use App\Dto\Report\ReportDto;
 use App\Exception\DtoValidationException;
 use App\Repository\ReportRepository;
 use App\Service\Report\ReportService;

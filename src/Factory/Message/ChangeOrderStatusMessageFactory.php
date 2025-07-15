@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Factory;
+namespace App\Factory\Message;
 
 use App\Entity\Order;
 use App\Enum\OrderStatusEnum;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Factory;
+namespace App\Factory\Message;
 
 use App\Entity\ReportDetail;
 use App\Enum\ReportStatusEnum;

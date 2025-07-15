@@ -19,40 +19,24 @@ class Product
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 2, max: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(type: Types::JSON)]
-    #[Assert\NotNull]
+    #[ORM\Column(type: 'measurement')]
     private Measurement $measurements;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Assert\NotBlank]
-    #[Assert\Length(min: 10, max: 5000)]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::INTEGER)]
-    #[Assert\NotNull]
-    #[Assert\Positive]
-    #[Assert\LessThan(value: 1000000)]
     private ?int $cost = null;
 
     #[ORM\Column(type: Types::INTEGER)]
-    #[Assert\NotNull]
-    #[Assert\Positive]
-    #[Assert\LessThanOrEqual(value: 100)]
     private ?int $tax = null;
 
     #[ORM\Column(type: Types::INTEGER)]
-    #[Assert\NotNull]
-    #[Assert\PositiveOrZero]
     private ?int $version = null;
 
     #[ORM\Column(type: Types::INTEGER, unique: true)]
-    #[Assert\NotNull]
-    #[Assert\Positive]
-    #[Assert\Unique]
     private ?int $external_id = null;
 
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'product')]

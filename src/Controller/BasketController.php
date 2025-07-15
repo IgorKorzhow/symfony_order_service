@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Dto\BasketProductDto;
+use App\Dto\Basket\BasketProductDto;
 use App\Exception\DtoValidationException;
 use App\Repository\ProductRepository;
 use App\Service\Basket\BasketServiceInterface;

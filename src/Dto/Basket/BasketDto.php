@@ -1,8 +1,9 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Dto;
+namespace App\Dto\Basket;
 
+use App\Dto\AbstractValidationDto;
 use App\Exception\Basket\ProductAlreadyExistsException;
 use App\Exception\Basket\ProductDoesntExistsException;
 use App\Exception\Basket\ProductPriceNotFoundException;

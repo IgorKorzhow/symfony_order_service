@@ -2,7 +2,7 @@
 
 namespace App\Service\Report;
 
-use App\Dto\ReportDto;
+use App\Dto\Report\ReportDto;
 use App\Entity\Report;
 use App\Entity\ReportDetail;
 use App\Enum\ReportStatusEnum;

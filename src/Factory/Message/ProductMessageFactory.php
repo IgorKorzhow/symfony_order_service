@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Factory;
+namespace App\Factory\Message;
 
 use App\Message\Product\Measurement;
 use App\Message\Product\ProductMessage;

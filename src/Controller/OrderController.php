@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Dto\OrderDto;
+use App\Dto\Order\OrderDto;
 use App\Entity\Order;
 use App\Enum\OrderStatusEnum;
 use App\Exception\DtoValidationException;

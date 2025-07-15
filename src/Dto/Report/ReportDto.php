@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Dto;
+namespace App\Dto\Report;
 
+use App\Dto\AbstractValidationDto;
 use App\Enum\ReportTypeEnum;
 use Symfony\Component\Validator\Constraints as Assert;
 

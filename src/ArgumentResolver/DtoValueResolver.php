@@ -4,7 +4,6 @@ namespace App\ArgumentResolver;
 use App\Dto\AbstractValidationDto;
 use ReflectionClass;
 use ReflectionException;
-use ReflectionNamedType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -26,12 +25,18 @@ class DtoValueResolver implements ValueResolverInterface
 
         $data = json_decode($request->getContent(), true) ?? [];
 
+        if ($request->getMethod() === Request::METHOD_GET) {
+            $data = array_merge($request->query->all(), $data);
+        }
+
         $data = $this->normalizeNestedStructures($data, $dtoClass);
 
-        yield new $dtoClass($data);
+        yield $this->instantiateDto($dtoClass, $data);
     }
 
     /**
+     * Рекурсивно нормализует вложенные DTO.
+     *
      * @throws ReflectionException
      */
     private function normalizeNestedStructures(array $data, string $dtoClass): array
@@ -41,7 +46,7 @@ class DtoValueResolver implements ValueResolverInterface
         foreach ($reflection->getProperties() as $property) {
             $type = $property->getType();
 
-            if (!$type instanceof ReflectionNamedType || $type->isBuiltin()) {
+            if (!$type || $type->isBuiltin()) {
                 continue;
             }
 
@@ -54,7 +59,7 @@ class DtoValueResolver implements ValueResolverInterface
                         $data[$propertyName],
                         $nestedClass
                     );
-                    $data[$propertyName] = new $nestedClass($data[$propertyName]);
+                    $data[$propertyName] = $this->instantiateDto($nestedClass, $data[$propertyName]);
                 } elseif (class_exists($nestedClass)) {
                     $data[$propertyName] = $this->denormalizeObject(
                         $data[$propertyName],
@@ -65,6 +70,39 @@ class DtoValueResolver implements ValueResolverInterface
         }
 
         return $data;
+    }
+
+    private function instantiateDto(string $dtoClass, array $data): object
+    {
+        try {
+            $reflection = new ReflectionClass($dtoClass);
+            $constructor = $reflection->getConstructor();
+
+            if (!$constructor) {
+                return new $dtoClass();
+            }
+
+            $parameters = $constructor->getParameters();
+            $args = [];
+
+            foreach ($parameters as $param) {
+                $name = $param->getName();
+
+                if (array_key_exists($name, $data)) {
+                    $args[] = $data[$name];
+                } elseif ($param->isDefaultValueAvailable()) {
+                    $args[] = $param->getDefaultValue();
+                } else {
+                    throw new BadRequestHttpException("Missing required parameter: $name");
+                }
+            }
+
+            return $reflection->newInstanceArgs($args);
+        } catch (Throwable $e) {
+            throw new BadRequestHttpException(
+                sprintf('Failed to instantiate %s: %s', $dtoClass, $e->getMessage())
+            );
+        }
     }
 
     private function denormalizeObject(array $data, string $className): object
@@ -82,3 +120,4 @@ class DtoValueResolver implements ValueResolverInterface
         }
     }
 }
+

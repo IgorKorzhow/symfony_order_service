@@ -10,7 +10,7 @@ final class PaginateQueryService
     /**
      * @throws \Exception
      */
-    public function paginate(QueryBuilder $queryBuilder, int $page = 1, ?int $limit = null): PaginatedListEntity
+    public function paginate(QueryBuilder $queryBuilder, int $page = 1, int $limit = 10): PaginatedListEntity
     {
         $queryBuilder = $queryBuilder
             ->setFirstResult($limit * ($page - 1))

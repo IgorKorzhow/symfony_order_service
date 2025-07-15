@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Dto;
+namespace App\Dto\Basket;
 
+use App\Dto\AbstractValidationDto;
 use App\Entity\Product;
 use App\Validator\ExistsEntityByField;
 use Symfony\Component\Serializer\Attribute\Groups;

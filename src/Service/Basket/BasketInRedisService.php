@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Service\Basket;
 
-use App\Dto\BasketDto;
-use App\Dto\BasketProductDto;
+use App\Dto\Basket\BasketDto;
+use App\Dto\Basket\BasketProductDto;
 use App\Exception\Basket\ProductDoesntExistsException;
 use Exception;
 use Psr\Cache\InvalidArgumentException;

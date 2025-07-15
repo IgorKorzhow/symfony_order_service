@@ -2,7 +2,7 @@
 
 namespace App\Serializer;
 
-use App\Factory\ReportGeneratedMessageFactory;
+use App\Factory\Message\ReportGeneratedMessageFactory;
 use App\Message\Report\ReportGeneratedMessage;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;

@@ -2,7 +2,7 @@
 
 namespace App\Service\Order;
 
-use App\Dto\OrderDto;
+use App\Dto\Order\OrderDto;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Enum\DeliveryTypeEnum;

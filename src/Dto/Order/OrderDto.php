@@ -1,8 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Dto;
+namespace App\Dto\Order;
 
+use App\Dto\AbstractValidationDto;
+use App\Dto\Basket\BasketDto;
 use App\Enum\DeliveryTypeEnum;
 use App\Enum\OrderStatusEnum;
 use Symfony\Component\Validator\Constraints as Assert;
