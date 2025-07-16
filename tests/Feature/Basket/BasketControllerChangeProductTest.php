@@ -6,9 +6,9 @@ use App\Dto\Basket\BasketDto;
 use App\Dto\Basket\BasketProductDto;
 use App\Factory\Entity\ProductFactory;
 use App\Tests\Helpers\Helpers;
+use App\Tests\Override\Interface\TestCacheResetInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Contracts\Cache\CacheInterface;
 use Zenstruck\Foundry\Test\Factories;
@@ -18,7 +18,7 @@ final class BasketControllerChangeProductTest extends WebTestCase
     use Helpers;
     use Factories;
 
-    private CacheInterface&MockObject $cacheMock;
+    private $cacheMock;
     private $client;
 
     /**
@@ -28,7 +28,7 @@ final class BasketControllerChangeProductTest extends WebTestCase
     {
         $this->client = static::createClient();
 
-        $this->cacheMock = $this->createMock(CacheInterface::class);
+        $this->cacheMock = $this->createMock(TestCacheResetInterface::class);
 
         $this->cacheMock->method('get')
             ->willReturnOnConsecutiveCalls(
@@ -51,6 +51,8 @@ final class BasketControllerChangeProductTest extends WebTestCase
 
         $this->cacheMock->method('delete')
             ->willReturn(true);
+
+        $this->cacheMock->method('reset')->willReturn(null);
 
         $this->client->getContainer()->set(CacheInterface::class, $this->cacheMock);
     }
@@ -96,12 +98,10 @@ final class BasketControllerChangeProductTest extends WebTestCase
         ];
     }
 
-//    public function testUnauthorized(): void
-//    {
-//        $client = self::createClient();
-//
-//        $client->request('PATCH', '/api/basket/products');
-//
-//        $this->assertResponseStatusCodeSame(401);
-//    }
+    public function testUnauthorized(): void
+    {
+        $this->client->request('PATCH', '/api/basket/products');
+
+        $this->assertResponseStatusCodeSame(401);
+    }
 }

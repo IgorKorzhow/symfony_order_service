@@ -15,6 +15,7 @@ security:
         main:
             provider: external_auth_provider
             stateless: true
+            entry_point: App\Security\ApiAuthenticationEntryPoint
             custom_authenticators:
                 - App\Security\ExternalAuthAuthenticator
 
@@ -54,6 +55,7 @@ when@test:
             main:
                 provider: test_user_provider
                 stateless: true
+                entry_point: App\Security\ApiAuthenticationEntryPoint
                 custom_authenticators:
                     - App\Security\ExternalAuthAuthenticator
 
