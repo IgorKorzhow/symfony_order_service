@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\OrderItemRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: OrderItemRepository::class)]
 class OrderItem
@@ -12,6 +13,7 @@ class OrderItem
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['order_item:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Order::class, inversedBy: 'orderItems')]
@@ -20,15 +22,19 @@ class OrderItem
 
     #[ORM\ManyToOne(targetEntity: Product::class)]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['order_item:read'])]
     private ?Product $product = null;
 
     #[ORM\Column]
+    #[Groups(['order_item:read'])]
     private int $quantity;
 
     #[ORM\Column]
+    #[Groups(['order_item:read'])]
     private float $price;
 
     #[ORM\Column(type: 'datetime_immutable')]
+    #[Groups(['order_item:read'])]
     private DateTimeImmutable $createdAt;
 
     public function __construct()
@@ -62,7 +68,7 @@ class OrderItem
         return $this->product;
     }
 
-    public function setProduct(?Product $product): self
+    public function setProduct(Product $product): self
     {
         $this->product = $product;
         return $this;

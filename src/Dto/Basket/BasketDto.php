@@ -7,6 +7,7 @@ use App\Dto\AbstractValidationDto;
 use App\Exception\Basket\ProductAlreadyExistsException;
 use App\Exception\Basket\ProductDoesntExistsException;
 use App\Exception\Basket\ProductPriceNotFoundException;
+use App\Helpers\ArrayHelpers;
 use Symfony\Component\Serializer\Attribute\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -46,6 +47,11 @@ class BasketDto extends AbstractValidationDto
     public function getProducts(): array
     {
         return $this->products;
+    }
+
+    public function getProductIds(): array
+    {
+        return ArrayHelpers::pluck($this->products, 'productId');
     }
 
     public function setProducts(array $products): void
@@ -129,13 +135,13 @@ class BasketDto extends AbstractValidationDto
             fn(BasketProductDto $product) => $product->getProductId() === $basketProduct->getProductId()
         );
 
-        $this->totalPrice -= $this->products[$productIdx]->getCount() * $this->products[$productIdx]->getPrice();
-
         if (!isset($productIdx)) {
             throw new ProductDoesntExistsException(
                 "Product with id: " . $basketProduct->getProductId() . " does not exist in basket"
             );
         }
+
+        $this->totalPrice -= $this->products[$productIdx]->getCount() * $this->products[$productIdx]->getPrice();
 
         if ($basketProduct->getPrice() === null) {
             throw new ProductPriceNotFoundException(

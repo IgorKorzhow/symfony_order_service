@@ -39,21 +39,25 @@ final class OrderController extends AbstractController
      * @throws UnknownEnumTypeException
      * @throws ExceptionInterface
      */
-    #[Route(path: '/order', name: 'order.create', methods: ['POST'])]
+    #[Route(path: '/api/order', name: 'order.create', methods: ['POST'])]
     public function createOrder(OrderDto $orderDto, ValidatorInterface $validator): JsonResponse
     {
         $user = $this->getUser();
 
-        $basket = $this->basketService->getBasket($user);
+        $basket = $this->basketService->getBasket($user->getId());
 
         $orderDto->setBasket($basket);
-        $orderDto->setUserId($user->getUserIdentifier());
+        $orderDto->setUserId($user->getId());
         $orderDto->validate($validator);
 
         $order = $this->orderService->createOrder($orderDto);
 
         return new JsonResponse(
-            $this->serializer->serialize($order, 'json'),
+            $this->serializer->normalize($order, 'json',
+                [
+                'groups' => ['order:read', 'order_item:read']
+                ]
+            ),
             Response::HTTP_CREATED,
         );
     }

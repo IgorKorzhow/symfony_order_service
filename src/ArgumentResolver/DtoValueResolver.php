@@ -4,6 +4,8 @@ namespace App\ArgumentResolver;
 use App\Dto\AbstractValidationDto;
 use ReflectionClass;
 use ReflectionException;
+use ReflectionNamedType;
+use ReflectionUnionType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
@@ -35,8 +37,6 @@ class DtoValueResolver implements ValueResolverInterface
     }
 
     /**
-     * Рекурсивно нормализует вложенные DTO.
-     *
      * @throws ReflectionException
      */
     private function normalizeNestedStructures(array $data, string $dtoClass): array
@@ -46,30 +46,47 @@ class DtoValueResolver implements ValueResolverInterface
         foreach ($reflection->getProperties() as $property) {
             $type = $property->getType();
 
-            if (!$type || $type->isBuiltin()) {
+            if (!$type) {
                 continue;
             }
 
             $propertyName = $property->getName();
-            $nestedClass = $type->getName();
+            $types = $this->getTypeNames($type);
 
             if (isset($data[$propertyName]) && is_array($data[$propertyName])) {
-                if (is_subclass_of($nestedClass, AbstractValidationDto::class)) {
-                    $data[$propertyName] = $this->normalizeNestedStructures(
-                        $data[$propertyName],
-                        $nestedClass
-                    );
-                    $data[$propertyName] = $this->instantiateDto($nestedClass, $data[$propertyName]);
-                } elseif (class_exists($nestedClass)) {
-                    $data[$propertyName] = $this->denormalizeObject(
-                        $data[$propertyName],
-                        $nestedClass
-                    );
+                foreach ($types as $nestedClass) {
+                    if (is_subclass_of($nestedClass, AbstractValidationDto::class)) {
+                        $data[$propertyName] = $this->normalizeNestedStructures(
+                            $data[$propertyName],
+                            $nestedClass
+                        );
+                        $data[$propertyName] = $this->instantiateDto($nestedClass, $data[$propertyName]);
+                        break;
+                    } elseif (class_exists($nestedClass)) {
+                        $data[$propertyName] = $this->denormalizeObject(
+                            $data[$propertyName],
+                            $nestedClass
+                        );
+                        break;
+                    }
                 }
             }
         }
 
         return $data;
+    }
+
+    private function getTypeNames(ReflectionNamedType|ReflectionUnionType $type): array
+    {
+        if ($type instanceof ReflectionNamedType) {
+            return [$type->getName()];
+        }
+
+        // Handle union types
+        return array_map(
+            fn(ReflectionNamedType $t) => $t->getName(),
+            $type->getTypes()
+        );
     }
 
     private function instantiateDto(string $dtoClass, array $data): object

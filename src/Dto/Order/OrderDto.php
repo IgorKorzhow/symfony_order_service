@@ -5,6 +5,7 @@ namespace App\Dto\Order;
 
 use App\Dto\AbstractValidationDto;
 use App\Dto\Basket\BasketDto;
+use App\Dto\Basket\BasketProductDto;
 use App\Enum\DeliveryTypeEnum;
 use App\Enum\OrderStatusEnum;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -19,14 +20,14 @@ class OrderDto extends AbstractValidationDto
 
     #[Assert\NotBlank]
     #[Assert\Choice(callback: [DeliveryTypeEnum::class, 'values'])]
-    private string $deliveryType;
+    private ?string $deliveryType;
 
     #[Assert\NotBlank]
     #[Assert\Regex(
         pattern: '/^\+375(25|29|33|44)\d{7}$/',
         message: 'Please enter a valid Belarusian phone number, e.g. +375291234567'
     )]
-    private string $phone;
+    private ?string $phone;
 
     #[Assert\NotBlank]
     #[Assert\Choice(callback: [OrderStatusEnum::class, 'values'])]
@@ -35,7 +36,7 @@ class OrderDto extends AbstractValidationDto
     #[Assert\NotBlank]
     private string|int $userId;
 
-    public function __construct(string $deliveryType, string $phone)
+    public function __construct(string $deliveryType = null, string $phone = null)
     {
         $this->deliveryType = $deliveryType;
         $this->phone = $phone;
@@ -112,8 +113,8 @@ class OrderDto extends AbstractValidationDto
             );
         }
 
-        $totalProductsCount = array_reduce($this->getBasket()->getProducts(), function ($carry, $product) {
-            return $carry + $product->getQuantity();
+        $totalProductsCount = array_reduce($this->getBasket()->getProducts(), function ($carry, BasketProductDto $product) {
+            return $carry + $product->getCount();
         }, 0);
 
         if ($totalProductsCount > 20) {
