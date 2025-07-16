@@ -89,7 +89,7 @@ class BasketDto extends AbstractValidationDto
 
         $this->products = array_filter(
             $this->getProducts(),
-            fn(BasketProductDto $savedProduct) => $savedProduct->getProductId() === $basketProduct->getProductId()
+            fn(BasketProductDto $savedProduct) => $savedProduct->getProductId() !== $basketProduct->getProductId()
         );
 
         return $this;
@@ -106,7 +106,7 @@ class BasketDto extends AbstractValidationDto
             fn(BasketProductDto $product) => $product->getProductId() === $basketProduct->getProductId()
         );
 
-        if (!isset($productIdx)) {
+        if (!isset($productIdx) && $basketProduct->getCount() > 0) {
             return $this->addProduct($basketProduct);
         }
 

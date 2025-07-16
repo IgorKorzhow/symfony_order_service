@@ -2,7 +2,6 @@
 
 namespace App\Security;
 
-use App\Service\Auth\ExternalAuthUser;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -14,22 +13,22 @@ use Symfony\Component\Security\Http\Authenticator\Passport\SelfValidatingPasspor
 
 class ExternalAuthAuthenticator extends AbstractAuthenticator
 {
-    public function supports(Request $request): ?bool
+    public function __construct(private readonly ExternalAuthUserProvider $userProvider)
     {
-        return $request->attributes->has('_user');
+    }
+
+    public function supports(Request $request): bool
+    {
+        return $request->headers->has('Authorization');
     }
 
     public function authenticate(Request $request): Passport
     {
-        $user = $request->attributes->get('_user');
-
-        if (!$user instanceof ExternalAuthUser) {
-            throw new AuthenticationException('Invalid user type');
-        }
+        $token = $request->headers->get('Authorization');
 
         return new SelfValidatingPassport(
-            new UserBadge($user->getUserIdentifier(), function() use ($user) {
-                return $user;
+            new UserBadge($token, function($token) {
+                return $this->userProvider->loadUserByIdentifier($token);
             })
         );
     }

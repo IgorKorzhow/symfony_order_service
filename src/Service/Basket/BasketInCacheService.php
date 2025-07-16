@@ -10,7 +10,7 @@ use Exception;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
 
-final class BasketInRedisService implements BasketServiceInterface
+final class BasketInCacheService implements BasketServiceInterface
 {
     private const BASKET_PREFIX = 'basket_';
 
@@ -118,5 +118,15 @@ final class BasketInRedisService implements BasketServiceInterface
     private function getBasketKey(int|string $userId): string
     {
         return self::BASKET_PREFIX . $userId;
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
+    public function deleteBasket(BasketDto $basket): bool
+    {
+        $basketKey = $this->getBasketKey($basket->getUserId());
+
+        return $this->cache->delete($basketKey);
     }
 }

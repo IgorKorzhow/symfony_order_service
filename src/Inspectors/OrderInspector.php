@@ -4,7 +4,6 @@ namespace App\Inspectors;
 
 use App\Entity\Order;
 use App\Enum\OrderStatusEnum;
-use App\Service\Auth\ExternalAuthUser;
 use Symfony\Component\Security\Core\Authorization\AuthorizationCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 

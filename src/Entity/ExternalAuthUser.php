@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Service\Auth;
+namespace App\Entity;
 
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -19,6 +19,8 @@ class ExternalAuthUser implements UserInterface
 
     private string $name;
 
+    private ?string $token;
+
     public function __construct(array $userData)
     {
         $this->id = (string) $userData['id'];
@@ -26,6 +28,7 @@ class ExternalAuthUser implements UserInterface
         $this->roles = $userData['roles'] ?? ['ROLE_USER'];
         $this->phone = $userData['phone'] ?? null;
         $this->name = $userData['name'];
+        $this->token = $userData['token'] ?? null;
     }
 
     public function getId(): int
@@ -85,6 +88,16 @@ class ExternalAuthUser implements UserInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->getId();
+        return $this->getToken();
+    }
+
+    public function getToken(): string
+    {
+        return $this->token;
+    }
+
+    public function setToken(string $token): void
+    {
+        $this->token = $token;
     }
 }

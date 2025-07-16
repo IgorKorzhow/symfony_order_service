@@ -28,30 +28,30 @@ final class BasketController extends AbstractController
     /**
      * @throws ExceptionInterface
      */
-    #[Route('/basket', name: 'index', methods: ['GET'])]
+    #[Route('/api/basket', name: 'index', methods: ['GET'])]
     public function index(): JsonResponse
     {
-        $basket = $this->basketService->getBasket($this->getUser()->getUserIdentifier());
+        $basket = $this->basketService->getBasket($this->getUser()->getId());
 
-        return new JsonResponse($this->serializer->serialize($basket, 'json'), Response::HTTP_OK);
+        return new JsonResponse($this->serializer->normalize($basket, 'json'), Response::HTTP_OK);
     }
 
     /**
      * @throws ExceptionInterface
      * @throws DtoValidationException
      */
-    #[Route('/bucket/products/change', name: 'basket_products_change', methods: ['PATCH'])]
+    #[Route('/api/basket/products', name: 'basket_products_change', methods: ['PATCH'])]
     public function changeProduct(BasketProductDto $basketProduct): JsonResponse
     {
         $basketProduct->validate($this->validator);
 
         $product = $this->productRepository->findOneBy(['id' => $basketProduct->getProductId()]);
 
-        $basketProduct->setPrice($product->getPrice());
+        $basketProduct->setPrice($product->getCost());
 
-        $basket = $this->basketService->getBasket($this->getUser()->getUserIdentifier());
+        $basket = $this->basketService->getBasket($this->getUser()->getId());
         $basket = $this->basketService->changeProduct($basket, $basketProduct);
 
-        return new JsonResponse($this->serializer->serialize($basket, 'json'), Response::HTTP_OK);
+        return new JsonResponse($this->serializer->normalize($basket, 'json'), Response::HTTP_OK);
     }
 }

@@ -11,7 +11,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class BasketProductDto extends AbstractValidationDto
 {
-    public function __construct(int|string $productId, int $count)
+    public function __construct(?int $productId = null, int $count = 0)
     {
         $this->productId = $productId;
         $this->count = $count;
@@ -19,7 +19,7 @@ class BasketProductDto extends AbstractValidationDto
 
     #[Assert\NotBlank, ExistsEntityByField(Product::class, 'id')]
     #[Groups(['json'])]
-    private int|string $productId;
+    private ?int $productId;
 
     #[Assert\NotBlank]
     #[Groups(['json'])]
@@ -27,14 +27,14 @@ class BasketProductDto extends AbstractValidationDto
 
     #[Assert\NotBlank]
     #[Groups(['json'])]
-    private int $price = 0;
+    private ?int $price = 0;
 
-    public function getProductId(): int|string
+    public function getProductId(): ?int
     {
         return $this->productId;
     }
 
-    public function setProductId(int|string $productId): void
+    public function setProductId(?int $productId): void
     {
         $this->productId = $productId;
     }

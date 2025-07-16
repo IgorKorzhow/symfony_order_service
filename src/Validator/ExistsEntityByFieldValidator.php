@@ -30,7 +30,7 @@ class ExistsEntityByFieldValidator extends ConstraintValidator
 
         $result = $repository->findOneBy([$constraint->field => $value]);
 
-        if (! isset($result)) {
+        if (isset($result)) {
             return;
         }
 
