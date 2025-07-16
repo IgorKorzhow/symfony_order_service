@@ -5,23 +5,27 @@ namespace App\Tests\Feature\Product;
 use App\Factory\Entity\ProductFactory;
 use App\Message\Product\Measurement;
 use App\Tests\Helpers\Helpers;
-use App\Tests\TransactionWebTestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Zenstruck\Foundry\Test\Factories;
 
-final class ProductControllerTest extends TransactionWebTestCase
+final class ProductControllerTest extends WebTestCase
 {
     use Helpers;
+    use Factories;
 
     #[DataProvider('indexDataProvider')]
     public function testIndex(array $createData, array $outputData): void
     {
+        $client = self::createClient();
+
         foreach ($createData as $productData) {
             ProductFactory::new()->create($productData);
         }
 
-        $this->client->request('GET', '/api/products');
+        $client->request('GET', '/api/products');
 
-        $data = json_decode($this->client->getResponse()->getContent(), true);
+        $data = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertEqualsWithExcludedFields($data, $outputData, ['data.*.id', 'data.*.createdAt', 'data.*.orderItems']);
     }
@@ -98,5 +102,21 @@ final class ProductControllerTest extends TransactionWebTestCase
                 ],
             ]
         ];
+    }
+
+    public function testQueryParams(): void
+    {
+        $client = self::createClient();
+
+        ProductFactory::new()->many(1)->create();
+
+        $client->request('GET', '/api/products', ['parPage' => 1, 'page' => 2]);
+
+        $data = json_decode($client->getResponse()->getContent(), true);
+
+        $this->assertSame([], $data['data']);
+        $this->assertSame(1, $data['totalPages']);
+        $this->assertSame(2, $data['page']);
+//        $this->assertSame(1, $data['perPage']);
     }
 }
