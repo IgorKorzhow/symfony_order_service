@@ -13,7 +13,7 @@ class ReportGeneratedMessage
     public function __construct(
         private Uuid $id,
         private ReportStatusEnum $result,
-        private ReportDetail $detail,
+        private ?ReportDetail $detail = null,
     ) {
     }
 
@@ -37,12 +37,12 @@ class ReportGeneratedMessage
         $this->result = $result;
     }
 
-    public function getDetail(): ReportDetail
+    public function getDetail(): ?ReportDetail
     {
         return $this->detail;
     }
 
-    public function setDetail(ReportDetail $detail): void
+    public function setDetail(?ReportDetail $detail = null): void
     {
         $this->detail = $detail;
     }

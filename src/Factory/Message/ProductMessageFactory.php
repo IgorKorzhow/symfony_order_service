@@ -74,22 +74,22 @@ readonly class ProductMessageFactory
             'measurements' => new Assert\Collection([
                 'weight' => [
                     new Assert\NotNull(),
-                    new Assert\Type(['type' => 'numeric']),
+                    new Assert\Type('numeric'),
                     new Assert\PositiveOrZero(),
                 ],
                 'height' => [
                     new Assert\NotNull(),
-                    new Assert\Type(['type' => 'numeric']),
+                    new Assert\Type('numeric'),
                     new Assert\PositiveOrZero(),
                 ],
                 'width' => [
                     new Assert\NotNull(),
-                    new Assert\Type(['type' => 'numeric']),
+                    new Assert\Type('numeric'),
                     new Assert\PositiveOrZero(),
                 ],
                 'length' => [
                     new Assert\NotNull(),
-                    new Assert\Type(['type' => 'numeric']),
+                    new Assert\Type('numeric'),
                     new Assert\PositiveOrZero(),
                 ],
             ]),

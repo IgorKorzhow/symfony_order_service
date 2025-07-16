@@ -7,15 +7,15 @@ use App\Message\Product\Measurement;
 use App\Message\Product\ProductMessage;
 use App\Serializer\ProductMessageSerializer;
 use PHPUnit\Framework\MockObject\Exception;
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
 use InvalidArgumentException;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductMessageSerializerTest extends TestCase
 {
-    private ProductMessageFactory&MockObject $factory;
+    private ProductMessageFactory $factory;
     private ProductMessageSerializer $serializer;
 
     /**
@@ -23,7 +23,7 @@ class ProductMessageSerializerTest extends TestCase
      */
     protected function setUp(): void
     {
-        $this->factory = $this->createMock(ProductMessageFactory::class);
+        $this->factory = new ProductMessageFactory($this->createMock(ValidatorInterface::class));
         $this->serializer = new ProductMessageSerializer($this->factory);
     }
 
@@ -70,10 +70,10 @@ class ProductMessageSerializerTest extends TestCase
             'tax' => 20,
             'version' => 1,
             'measurements' => [
-                'width' => 10,
+                'width' => 30,
                 'height' => 20,
                 'length' => 30,
-                'weight' => 40,
+                'weight' => 10,
             ]
         ];
 
@@ -86,19 +86,22 @@ class ProductMessageSerializerTest extends TestCase
             cost: 100,
             tax: 20,
             version: 1,
-            measurements: new Measurement(10, 20, 30, 40),
+            measurements: new Measurement(10, 20, 30, 30),
         );
-
-        $this->factory
-            ->expects($this->once())
-            ->method('fromArray')
-            ->with($data)
-            ->willReturn($productMessage);
 
         $envelope = $this->serializer->decode(['body' => $json]);
 
         $this->assertInstanceOf(Envelope::class, $envelope);
-        $this->assertSame($productMessage, $envelope->getMessage());
+        $this->assertSame($productMessage->getId(), $envelope->getMessage()->getId());
+        $this->assertSame($productMessage->getName(), $envelope->getMessage()->getName());
+        $this->assertSame($productMessage->getDescription(), $envelope->getMessage()->getDescription());
+        $this->assertSame($productMessage->getCost(), $envelope->getMessage()->getCost());
+        $this->assertSame($productMessage->getTax(), $envelope->getMessage()->getTax());
+        $this->assertSame($productMessage->getVersion(), $envelope->getMessage()->getVersion());
+        $this->assertSame($productMessage->getMeasurements()->getHeight(), $envelope->getMessage()->getMeasurements()->getHeight());
+        $this->assertSame($productMessage->getMeasurements()->getLength(), $envelope->getMessage()->getMeasurements()->getLength());
+        $this->assertSame($productMessage->getMeasurements()->getWidth(), $envelope->getMessage()->getMeasurements()->getWidth());
+        $this->assertSame($productMessage->getMeasurements()->getWeight(), $envelope->getMessage()->getMeasurements()->getWeight());
     }
 
     public function testDecodeThrowsForInvalidJson(): void

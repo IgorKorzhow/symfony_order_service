@@ -6,6 +6,8 @@ use App\Entity\Order;
 use App\Enum\OrderStatusEnum;
 use App\Message\Order\ChangeOrderStatusMessage;
 use App\Validator\ExistsEntityByField;
+use DateTimeImmutable;
+use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -15,6 +17,9 @@ readonly class ChangeOrderStatusMessageFactory
     {
     }
 
+    /**
+     * @throws Exception
+     */
     public function fromArray(array $data): ChangeOrderStatusMessage
     {
         $this->validateData($data);
@@ -22,7 +27,7 @@ readonly class ChangeOrderStatusMessageFactory
         return new ChangeOrderStatusMessage(
             orderId: $data['orderId'],
             status: $data['status'],
-            payedAt: $data['payedAt'] ?? null,
+            payedAt: $data['payedAt'] ? new DateTimeImmutable($data['payedAt']) : null,
         );
     }
 
@@ -46,7 +51,7 @@ readonly class ChangeOrderStatusMessageFactory
             'status' => [
                 new Assert\NotNull(),
                 new Assert\Choice(callback: [OrderStatusEnum::class, 'values'])],
-            'payed_at' => [
+            'payedAt' => [
                 new Assert\NotNull(),
                 new Assert\DateTime(format: 'Y-m-d')],
         ]);

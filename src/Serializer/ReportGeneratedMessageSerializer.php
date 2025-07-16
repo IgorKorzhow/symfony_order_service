@@ -8,7 +8,7 @@ use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 
-readonly class ReportGenerateMessageSerializer implements SerializerInterface
+readonly class ReportGeneratedMessageSerializer implements SerializerInterface
 {
     public function __construct(
         private ReportGeneratedMessageFactory $reportGeneratedMessageFactory,
@@ -37,10 +37,12 @@ readonly class ReportGenerateMessageSerializer implements SerializerInterface
         $data = [
             'reportId' => $message->getId(),
             'result' => $message->getResult()->value,
-            'detail' => [
-                'error' => $message->getResult()->error,
-                'message' => $message->getResult()->message,
-            ],
+            'detail' => $message->getDetail()
+                ? [
+                    'error' => $message->getDetail()->getError(),
+                    'message' => $message->getDetail()->getMessage(),
+                ]
+                : [],
         ];
 
         return [

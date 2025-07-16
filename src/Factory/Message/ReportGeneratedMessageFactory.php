@@ -23,7 +23,7 @@ readonly class ReportGeneratedMessageFactory
         return new ReportGeneratedMessage(
             id: new Uuid($data['reportId']),
             result: ReportStatusEnum::typeByString($data['result']),
-            detail: $data['detail']
+            detail: isset($data['detail']) && $data['detail']
                 ? new ReportDetail(
                     message: $data['message'],
                     error: $data['error']

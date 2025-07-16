@@ -2,8 +2,8 @@
 
 namespace App\Serializer;
 
-use App\Factory\Message\ProductMessageFactory;
-use App\Message\Product\ProductMessage;
+use App\Factory\Message\ChangeOrderStatusMessageFactory;
+use App\Message\Order\ChangeOrderStatusMessage;
 use InvalidArgumentException;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
@@ -12,7 +12,7 @@ use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
 readonly class ChangeOrderStatusMessageSerializer implements SerializerInterface
 {
     public function __construct(
-        private ProductMessageFactory $productMessageFactory,
+        private ChangeOrderStatusMessageFactory $factory,
     )
     {
     }
@@ -22,33 +22,24 @@ readonly class ChangeOrderStatusMessageSerializer implements SerializerInterface
         $data = json_decode($encodedEnvelope['body'], true);
 
         if (!$data) {
-            throw new MessageDecodingFailedException('Invalid product message format: ' . json_encode($encodedEnvelope));
+            throw new MessageDecodingFailedException('Invalid change order status message format: ' . json_encode($encodedEnvelope));
         }
 
-        return new Envelope($this->productMessageFactory->fromArray($data));
+        return new Envelope($this->factory->fromArray($data));
     }
 
     public function encode(Envelope $envelope): array
     {
         $message = $envelope->getMessage();
 
-        if (!$message instanceof ProductMessage) {
-            throw new InvalidArgumentException('Expected ProductMessage message');
+        if (!$message instanceof ChangeOrderStatusMessage) {
+            throw new InvalidArgumentException('Expected ChangeOrderStatusMessage message');
         }
 
         $data = [
-            'id' => $message->getId(),
-            'name' => $message->getName(),
-            'description' => $message->getDescription(),
-            'cost' => $message->getCost(),
-            'tax' => $message->getTax(),
-            'version' => $message->getVersion(),
-            'measurements' => [
-                'width' => $message->getMeasurements()->getWidth(),
-                'height' => $message->getMeasurements()->getHeight(),
-                'length' => $message->getMeasurements()->getLength(),
-                'weight' => $message->getMeasurements()->getWeight(),
-            ]
+            'orderId' => $message->getOrderId(),
+            'status' => $message->getStatus(),
+            'payedAt' => $message->getPayedAt(),
         ];
 
         return [
