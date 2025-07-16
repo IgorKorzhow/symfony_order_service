@@ -35,7 +35,6 @@ readonly class ExternalAuthUserProvider implements UserProviderInterface
     {
         return ExternalAuthUser::class === $class
             || is_subclass_of($class, ExternalAuthUser::class);
-
     }
 
     /**

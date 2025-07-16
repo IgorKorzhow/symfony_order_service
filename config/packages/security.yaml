@@ -44,3 +44,16 @@ when@test:
                 cost: 4 # Lowest possible value for bcrypt
                 time_cost: 3 # Lowest possible value for argon
                 memory_cost: 10 # Lowest possible value for argon
+
+        providers:
+            # users_in_memory: { memory: null }
+            test_user_provider:
+                id: App\Security\TestUserProvider
+
+        firewalls:
+            main:
+                provider: test_user_provider
+                stateless: true
+                custom_authenticators:
+                    - App\Security\ExternalAuthAuthenticator
+

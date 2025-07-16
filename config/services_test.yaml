@@ -35,5 +35,7 @@ services:
 
     App\Security\ExternalAuthAuthenticator:
         arguments:
-            $userProvider: '@App\Security\ExternalAuthUserProvider'
+            $userProvider: '@App\Security\TestUserProvider'
+
+
 

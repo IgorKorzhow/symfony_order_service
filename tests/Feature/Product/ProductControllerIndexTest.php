@@ -9,7 +9,7 @@ use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Zenstruck\Foundry\Test\Factories;
 
-final class ProductControllerTest extends WebTestCase
+final class ProductControllerIndexTest extends WebTestCase
 {
     use Helpers;
     use Factories;
