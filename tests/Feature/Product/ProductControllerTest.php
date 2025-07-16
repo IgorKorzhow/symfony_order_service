@@ -110,13 +110,17 @@ final class ProductControllerTest extends WebTestCase
 
         ProductFactory::new()->many(1)->create();
 
-        $client->request('GET', '/api/products', ['parPage' => 1, 'page' => 2]);
+        $client->request(
+            method: 'GET',
+            uri: '/api/products',
+            parameters: ['perPage' => 1, 'page' => 2],
+        );
 
         $data = json_decode($client->getResponse()->getContent(), true);
 
         $this->assertSame([], $data['data']);
         $this->assertSame(1, $data['totalPages']);
         $this->assertSame(2, $data['page']);
-//        $this->assertSame(1, $data['perPage']);
+        $this->assertSame(1, $data['perPage']);
     }
 }
