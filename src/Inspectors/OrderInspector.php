@@ -26,7 +26,7 @@ readonly class OrderInspector
 
     public function canPay(UserInterface $user, Order $order): bool
     {
-        if ($order->getUserId() !== $user->getUserIdentifier()) {
+        if ($order->getUserId() !== $user->getId()) {
             return false;
         }
 

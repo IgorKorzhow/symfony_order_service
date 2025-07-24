@@ -67,12 +67,12 @@ final class OrderController extends AbstractController
      * @throws ValidationException
      * @throws ExceptionInterface
      */
-    #[Route(path: '/order/{id}', name: 'order.update', methods: ['PUT'])]
+    #[Route(path: '/api/order/{id}/change-status', name: 'order.update', methods: ['PUT'])]
     public function changeOrderStatus(Order $order, Request $request): JsonResponse
     {
-        $orderStatus = $request->get('order_status');
+        $data = json_decode($request->getContent(), true);
 
-        if (!isset($orderStatusRaw) || !OrderStatusEnum::hasValue($orderStatus)) {
+        if (!isset($data['orderStatus']) || !OrderStatusEnum::hasValue($data['orderStatus'])) {
             throw new ValidationException('Order status is missing or invalid');
         }
 
@@ -85,15 +85,15 @@ final class OrderController extends AbstractController
             );
         }
 
-        $order = $this->orderService->changeOrderStatus($order, $orderStatus);
+        $order = $this->orderService->changeOrderStatus($order, $data['orderStatus']);
 
         return new JsonResponse(
-            $this->serializer->serialize($order, 'json'),
+            $this->serializer->normalize($order, 'json'),
             Response::HTTP_OK,
         );
     }
 
-    #[Route(path: '/order/{id}/pay', name: 'order.pay', methods: ['PUT'])]
+    #[Route(path: '/api/order/{id}/pay', name: 'order.pay', methods: ['PUT'])]
     public function payOrder(Order $order): RedirectResponse|JsonResponse
     {
         $user = $this->getUser();
@@ -107,7 +107,7 @@ final class OrderController extends AbstractController
             );
         }
 
-        $paymentUrl = $this->paymentService->createPaymentUrlForOrder($user->getUserIdentifier(), $order);
+        $paymentUrl = $this->paymentService->createPaymentUrlForOrder($user->getId(), $order);
 
         return $this->redirect($paymentUrl);
     }

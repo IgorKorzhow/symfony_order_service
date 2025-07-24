@@ -35,7 +35,6 @@ final class BasketControllerChangeProductTest extends WebTestCase
                 new BasketDto(
                     userId: 1,
                     products: [],
-                    totalPrice: 0
                 ),
                 new BasketDto(
                     userId: 1,
@@ -45,7 +44,6 @@ final class BasketControllerChangeProductTest extends WebTestCase
                             count: 10
                         ),
                     ],
-                    totalPrice: 10
                 )
             );
 
@@ -93,7 +91,7 @@ final class BasketControllerChangeProductTest extends WebTestCase
                             "productId" => 1,
                         ],
                     ],
-                    "totalPrice" => 10,
+                    "totalPrice" => 0,
             ]]
         ];
     }

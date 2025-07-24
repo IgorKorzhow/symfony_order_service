@@ -32,7 +32,6 @@ final class BasketControllerIndexTest extends WebTestCase
                 new BasketDto(
                     userId: 1,
                     products: [],
-                    totalPrice: 0
                 )
             );
 

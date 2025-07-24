@@ -45,7 +45,10 @@ final class AuthService
             );
 
             if ($response->getStatusCode() !== Response::HTTP_OK) {
-                throw new AuthServiceUnauthorizedException(code: Response::HTTP_UNAUTHORIZED);
+                throw new AuthServiceUnauthorizedException(
+                    message: 'User not found or token is invalid',
+                    code: Response::HTTP_UNAUTHORIZED
+                );
             }
 
             $authUser = new ExternalAuthUser($response->toArray());
