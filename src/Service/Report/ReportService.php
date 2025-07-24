@@ -32,6 +32,7 @@ final readonly class ReportService
         $report = new Report();
 
         $report->setReportType(ReportTypeEnum::typeByString($reportDto->getReportType()));
+        $report->setStatus(ReportStatusEnum::CREATED);
         $report->setDateFrom($reportDto->getDateFrom());
         $report->setDateTo($reportDto->getDateTo());
 

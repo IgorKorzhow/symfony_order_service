@@ -32,7 +32,7 @@ class Report
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
     #[Groups('json')]
-    private ReportDetail $detail;
+    private ?ReportDetail $detail;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups('json')]
@@ -132,7 +132,7 @@ class Report
         return $this->createdAt;
     }
 
-    public function getDetail(): ReportDetail
+    public function getDetail(): ?ReportDetail
     {
         return $this->detail;
     }

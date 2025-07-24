@@ -6,6 +6,7 @@ namespace App\Dto\Report;
 
 use App\Dto\AbstractValidationDto;
 use App\Enum\ReportTypeEnum;
+use App\Exception\ValidationException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ReportDto extends AbstractValidationDto
@@ -16,19 +17,24 @@ class ReportDto extends AbstractValidationDto
     private string $reportType;
 
     #[Assert\NotNull]
-    #[Assert\DateTime]
+    #[Assert\Type('\DateTimeImmutable')]
     private \DateTimeImmutable $dateFrom;
 
     #[Assert\NotNull]
-    #[Assert\Date]
+    #[Assert\Type('\DateTimeImmutable')]
     #[Assert\GreaterThanOrEqual(propertyPath: 'dateFrom')]
     private \DateTimeImmutable $dateTo;
 
     public function __construct(string $reportType, string $dateFrom, string $dateTo)
     {
         $this->reportType = $reportType;
-        $this->dateFrom = new \DateTimeImmutable($dateFrom);
-        $this->dateTo = new \DateTimeImmutable($dateTo);
+
+        try {
+            $this->dateFrom = new \DateTimeImmutable($dateFrom);
+            $this->dateTo = new \DateTimeImmutable($dateTo);
+        } catch (\Exception $e) {
+            throw new ValidationException('Invalid date format provided');
+        }
     }
 
     public function getReportType(): string
