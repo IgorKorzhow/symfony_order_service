@@ -2,6 +2,9 @@
 
 namespace App\Message\Order;
 
+use Symfony\Component\Messenger\Attribute\AsMessage;
+
+#[AsMessage('kafka_change_order_status_consumer')]
 class ChangeOrderStatusMessage
 {
     public function __construct(

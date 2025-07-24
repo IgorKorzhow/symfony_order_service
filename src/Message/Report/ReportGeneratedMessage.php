@@ -7,7 +7,7 @@ use App\Enum\ReportStatusEnum;
 use Symfony\Component\Messenger\Attribute\AsMessage;
 use Symfony\Component\Uid\Uuid;
 
-#[AsMessage('kafka_generate_report_producer')]
+#[AsMessage('kafka_report_generated_producer')]
 class ReportGeneratedMessage
 {
     public function __construct(

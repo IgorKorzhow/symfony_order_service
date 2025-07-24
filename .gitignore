@@ -21,3 +21,4 @@ phpstan.neon
 /.phpunit.cache/
 ###< phpunit/phpunit ###
 /.idea
+/public/reports/

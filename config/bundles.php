@@ -8,6 +8,7 @@ return [
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
     Zenstruck\Foundry\ZenstruckFoundryBundle::class => ['dev' => true, 'test' => true],
-    Koco\Kafka\KocoKafkaBundle::class => ['all' => true],
     DAMA\DoctrineTestBundle\DAMADoctrineTestBundle::class => ['test' => true],
+    Enqueue\Bundle\EnqueueBundle::class => ['all' => true],
+    Enqueue\MessengerAdapter\Bundle\EnqueueAdapterBundle::class => ['all' => true],
 ];

@@ -5,7 +5,7 @@ namespace App\Message\Report;
 use Symfony\Component\Messenger\Attribute\AsMessage;
 use Symfony\Component\Uid\Uuid;
 
-#[AsMessage('kafka_generate_report_producer')]
+#[AsMessage('kafka_generate_report')]
 class ReportOrderedMessage
 {
     public function __construct(

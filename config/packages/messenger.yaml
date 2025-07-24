@@ -1,122 +1,52 @@
 framework:
     messenger:
         # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
-        failure_transport: failed
+#        failure_transport: failed
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
             # async: '%env(MESSENGER_TRANSPORT_DSN)%'
-            failed: 'doctrine://default?queue_name=failed'
-            # sync: 'sync://'
+            # failed: 'doctrine://default?queue_name=failed'
+#             sync: 'sync://'
 
             kafka_product_consumer:
-                # failure_transport: failed
-                dsn: '%env(KAFKA_URL)%'
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
                 serializer: App\Serializer\ProductMessageSerializer
                 options:
-                    commitAsync: true
-                    receiveTimeout: 10000
                     topic:
                         name: "product"
-                    kafka_conf:
-                        enable.auto.offset.store: 'false'
-                        group.id: 'my-group-id' # should be unique per consumer
-                        'metadata.broker.list': '%env(KAFKA_BROKER_LIST)%'
-#                        security.protocol: 'sasl_ssl'
-#                        ssl.ca.location: '%kernel.project_dir%/config/kafka/ca.pem'
-#                        sasl.username: '%env(KAFKA_SASL_USERNAME)%'
-#                        sasl.password: '%env(KAFKA_SASL_PASSWORD)%'
-#                        sasl.mechanisms: 'SCRAM-SHA-256'
-                        max.poll.interval.ms: '45000'
-                    topic_conf:
-                        auto.offset.reset: 'earliest'
-                retry_strategy:
-                    max_retries: 3
-                    delay: 1000
+                    queue:
+                        name: "product"
 
             kafka_change_order_status_consumer:
-                # failure_transport: failed
-                dsn: '%env(KAFKA_URL)%'
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
                 serializer: App\Serializer\ChangeOrderStatusMessageSerializer
                 options:
-                    commitAsync: true
-                    receiveTimeout: 10000
                     topic:
                         name: "order"
-                    kafka_conf:
-                        enable.auto.offset.store: 'false'
-                        group.id: 'my-group-id' # should be unique per consumer
-                        'metadata.broker.list': '%env(KAFKA_BROKER_LIST)%'
-                        #                        security.protocol: 'sasl_ssl'
-                        #                        ssl.ca.location: '%kernel.project_dir%/config/kafka/ca.pem'
-                        #                        sasl.username: '%env(KAFKA_SASL_USERNAME)%'
-                        #                        sasl.password: '%env(KAFKA_SASL_PASSWORD)%'
-                        #                        sasl.mechanisms: 'SCRAM-SHA-256'
-                        max.poll.interval.ms: '45000'
-                    topic_conf:
-                        auto.offset.reset: 'earliest'
-                retry_strategy:
-                    max_retries: 3
-                    delay: 1000
+                    queue:
+                        name: "order"
 
-            kafka_generate_report_producer:
-                dsn: '%env(KAFKA_URL)%'
+            kafka_generate_report:
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
                 options:
-                    flushTimeout: 10000
-                    flushRetries: 5
                     topic:
                         name: 'generate_report'
-#                    kafka_conf:
-#                        security.protocol: 'sasl_ssl'
-#                        ssl.ca.location: '%kernel.project_dir%/config/kafka/ca.pem'
-#                        sasl.username: '%env(KAFKA_SASL_USERNAME)%'
-#                        sasl.password: '%env(KAFKA_SASL_PASSWORD)%'
-#                        sasl.mechanisms: 'SCRAM-SHA-256'
-
-            kafka_generate_report_consumer:
-                # failure_transport: failed
-                dsn: '%env(KAFKA_URL)%'
-                options:
-                    commitAsync: true
-                    receiveTimeout: 10000
-                    topic:
-                        name: "generate_report"
-                    kafka_conf:
-                        enable.auto.offset.store: 'false'
-                        group.id: 'my-group-id' # should be unique per consumer
-                        'metadata.broker.list': '%env(KAFKA_BROKER_LIST)%'
-                        #                        security.protocol: 'sasl_ssl'
-                        #                        ssl.ca.location: '%kernel.project_dir%/config/kafka/ca.pem'
-                        #                        sasl.username: '%env(KAFKA_SASL_USERNAME)%'
-                        #                        sasl.password: '%env(KAFKA_SASL_PASSWORD)%'
-                        #                        sasl.mechanisms: 'SCRAM-SHA-256'
-                        max.poll.interval.ms: '45000'
-                    topic_conf:
-                        auto.offset.reset: 'earliest'
-                retry_strategy:
-                    max_retries: 3
-                    delay: 1000
+                    queue:
+                        name: 'generate_report'
 
             kafka_report_generated_producer:
-                dsn: '%env(KAFKA_URL)%'
-                serializer: App\Serializer\ChangeOrderStatusMessageSerializer
+                serializer: App\Serializer\ReportGeneratedMessageSerializer
+                dsn: "%env(MESSENGER_TRANSPORT_DSN)%"
                 options:
-                    flushTimeout: 10000
-                    flushRetries: 5
                     topic:
                         name: 'report_generated'
-            #                    kafka_conf:
-            #                        security.protocol: 'sasl_ssl'
-            #                        ssl.ca.location: '%kernel.project_dir%/config/kafka/ca.pem'
-            #                        sasl.username: '%env(KAFKA_SASL_USERNAME)%'
-            #                        sasl.password: '%env(KAFKA_SASL_PASSWORD)%'
-            #                        sasl.mechanisms: 'SCRAM-SHA-256'
-
+                    queue:
+                        name: 'report_generated'
 
         routing:
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
-#            'App\Message\Product\ProductMessage': kafka_product_consumer
 
 # when@test:
 #    framework:

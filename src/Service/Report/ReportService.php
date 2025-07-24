@@ -47,18 +47,18 @@ final readonly class ReportService
 
     public function generateReport(Report $report): Report
     {
-        try {
+//        try {
             $reportGenerator = $this->reportGeneratorFactory->make($report->getReportType());
 
             $report = $reportGenerator->generate($report);
             $report->setStatus(ReportStatusEnum::SUCCESS);
-        } catch (\Throwable $e) {
-            $report->setStatus(ReportStatusEnum::ERROR);
-            $report->setDetail(new ReportDetail(
-                message: $e->getMessage(),
-                error: $e->getTraceAsString(),
-            ));
-        }
+//        } catch (\Throwable $e) {
+//            $report->setStatus(ReportStatusEnum::ERROR);
+//            $report->setDetail(new ReportDetail(
+//                message: $e->getMessage(),
+//                error: $e->getTraceAsString(),
+//            ));
+//        }
 
         $this->reportRepository->flush();
 

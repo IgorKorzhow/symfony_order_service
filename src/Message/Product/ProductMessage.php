@@ -2,6 +2,9 @@
 
 namespace App\Message\Product;
 
+use Symfony\Component\Messenger\Attribute\AsMessage;
+
+#[AsMessage('kafka_product_consumer')]
 class ProductMessage
 {
     public function __construct(

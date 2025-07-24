@@ -27,7 +27,7 @@ readonly class ChangeOrderStatusMessageFactory
         return new ChangeOrderStatusMessage(
             orderId: $data['orderId'],
             status: $data['status'],
-            payedAt: $data['payedAt'] ? new DateTimeImmutable($data['payedAt']) : null,
+            payedAt: isset($data['payedAt']) ? new DateTimeImmutable($data['payedAt']) : null,
         );
     }
 
@@ -43,7 +43,7 @@ readonly class ChangeOrderStatusMessageFactory
     private function validationConstraints(): Assert\Collection
     {
         return new Assert\Collection([
-            'id' => [
+            'orderId' => [
                 new Assert\NotNull(),
                 new Assert\Type(type: 'integer'),
                 new ExistsEntityByField(entityClass: Order::class, field: 'id'),
@@ -51,9 +51,9 @@ readonly class ChangeOrderStatusMessageFactory
             'status' => [
                 new Assert\NotNull(),
                 new Assert\Choice(callback: [OrderStatusEnum::class, 'values'])],
-            'payedAt' => [
-                new Assert\NotNull(),
-                new Assert\DateTime(format: 'Y-m-d')],
+            'payedAt' => new Assert\Optional([
+                new Assert\DateTime(format: 'Y-m-d'),
+            ]),
         ]);
     }
 }

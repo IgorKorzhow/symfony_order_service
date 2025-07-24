@@ -2,6 +2,7 @@
 
 namespace App\Service\Report\Generator;
 
+use App\Entity\OrderItem;
 use App\Entity\Product;
 use App\Entity\Report;
 use App\Repository\ProductRepository;
@@ -39,12 +40,13 @@ readonly class ProductCellFileReportGenerator implements ReportGeneratorInterfac
             /** @var Product $orderedProduct */
             $data = [];
             foreach ($orderedProduct->getOrderItems() as $orderItem) {
+                /** @var $orderItem OrderItem */
                 $data[] = [
                     'product_name' => $orderedProduct->getName(),
                     'price' => $orderItem->getPrice(),
                     'amount' => $orderItem->getQuantity(),
                     'user' => [
-                        'id' => $orderItem->getUser()->getId(),
+                        'id' => $orderItem->getOrder()->getUserId(),
                     ],
                 ];
             }

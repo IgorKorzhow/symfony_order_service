@@ -45,22 +45,33 @@ class ProductRepository extends ServiceEntityRepository
         return $this->paginateQueryService->paginate($baseQuery, $page, $perPage);
     }
 
-    public function getOrderedProductsInDatePeriodIterator(\DateTimeImmutable $dateFrom, \DateTimeImmutable $dateTo): iterable
+    public function getOrderedProductsInDatePeriodIterator(\DateTimeImmutable $dateFrom, \DateTimeImmutable $dateTo, int $batchSize = 50): iterable
     {
-        $baseQuery = $this->createQueryBuilder('product')
-            ->innerJoin('product.orderItems', 'order_items')
-            ->addSelect('order_items')
-            ->innerJoin('order_items.order', 'order')
-            ->addSelect('order')
-            ->where('order.payedAt BETWEEN :dateFrom AND :dateTo')
-            ->andWhere('order.orderStatus != :status')
-            ->setParameter('dateFrom', $dateFrom->format('Y-m-d'))
-            ->setParameter('dateTo', $dateTo->format('Y-m-d'))
-            ->setParameter('status', OrderStatusEnum::CREATED->value)
-            ->getQuery();
+        $lastId = 0;
 
-        return $baseQuery->toIterable();
+        do {
+            $qb = $this->createQueryBuilder('product')
+                ->innerJoin('product.orderItems', 'order_items')
+                ->addSelect('order_items')
+                ->innerJoin('order_items.order', 'ord')
+                ->addSelect('ord')
+                ->where('ord.payedAt BETWEEN :dateFrom AND :dateTo')
+                ->andWhere('ord.orderStatus != :status')
+                ->andWhere('product.id > :lastId')
+                ->setParameter('dateFrom', $dateFrom->format('Y-m-d'))
+                ->setParameter('dateTo', $dateTo->format('Y-m-d'))
+                ->setParameter('status', OrderStatusEnum::CREATED->value)
+                ->setParameter('lastId', $lastId)
+                ->orderBy('product.id', 'ASC')
+                ->setMaxResults($batchSize);
 
+            $results = $qb->getQuery()->getResult();
+
+            foreach ($results as $product) {
+                yield $product;
+                $lastId = $product->getId();
+            }
+        } while (count($results) === $batchSize);
     }
 
     //    /**
