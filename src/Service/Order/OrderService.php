@@ -2,24 +2,27 @@
 
 namespace App\Service\Order;
 
-use App\Dto\Order\OrderDto;
+use App\Dto\RequestDto\Order\OrderCreateRequestDto;
+use App\Entity\Basket;
 use App\Entity\BasketProduct;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Enum\DeliveryTypeEnum;
 use App\Enum\OrderStatusEnum;
+use App\Exception\Order\OrderHasntProductsException;
+use App\Exception\Order\TooManyProductsInOrderException;
 use App\Exception\UnknownEnumTypeException;
 use App\Helpers\ArrayHelpers;
-use App\Repository\OrderItemRepository;
 use App\Repository\OrderRepository;
 use App\Repository\ProductRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 final readonly class OrderService
 {
     public function __construct(
         private OrderRepository $orderRepository,
         private ProductRepository $productRepository,
-        private OrderItemRepository $orderItemRepository,
+        private EntityManagerInterface $entityManager,
     )
     {
     }
@@ -27,34 +30,47 @@ final readonly class OrderService
     /**
      * @throws UnknownEnumTypeException
      */
-    public function createOrder(OrderDto $orderDto): Order
+    public function createOrder(OrderCreateRequestDto $requestDto, Basket $basket): Order
     {
+        if (count($basket->products) < 1) {
+            throw new OrderHasntProductsException(
+                "Basket must be at least 1 product"
+            );
+        }
+
+        $totalProductsCount = array_reduce($basket->products, function ($carry, BasketProduct $product) {
+            return $carry + $product->count;
+        }, 0);
+
+        if ($totalProductsCount > 20) {
+            throw new TooManyProductsInOrderException(
+                "Basket must be at most 20 products"
+            );
+        }
+
         $order = new Order();
 
-        $order->setUserId($orderDto->getUserId());
-        $order->setTotalPrice($orderDto->getBasket()->getTotalPrice());
-        $order->setDeliveryType(DeliveryTypeEnum::typeByString($orderDto->getDeliveryType()));
-        $order->setOrderStatus(OrderStatusEnum::typeByString($orderDto->getOrderStatus()));
+        $order->setUserId($basket->userId);
+        $order->setTotalPrice($basket->totalPrice);
+        $order->setDeliveryType(DeliveryTypeEnum::typeByString($requestDto->deliveryType));
+        $order->setOrderStatus(OrderStatusEnum::CREATED);
 
-        $order = $this->orderRepository->store($order);
-
-        $productIds = ArrayHelpers::pluck($orderDto->getBasket()->getProducts(), 'productId');
+        $productIds = ArrayHelpers::pluck($basket->products, 'productId');
         $productsGroupedById = ArrayHelpers::groupBy($this->productRepository->findBy(['id' => $productIds]), 'id');
 
-        foreach ($orderDto->getBasket()->getProducts() as $productDto) {
+        foreach ($basket->products as $product) {
             /** @var BasketProduct $product */
             $orderItem = new OrderItem();
 
-            $orderItem->setProduct(ArrayHelpers::first($productsGroupedById[$productDto->getProductId()]));
-            $orderItem->setQuantity($productDto->getCount());
-            $orderItem->setPrice($productDto->getPrice());
-
-            $this->orderItemRepository->persist($orderItem);
+            $orderItem->setProduct(ArrayHelpers::first($productsGroupedById[$product->productId]));
+            $orderItem->setQuantity($product->count);
+            $orderItem->setPrice($product->price);
 
             $order->addOrderItem($orderItem);
         }
 
-        $this->orderItemRepository->flush();
+        $this->entityManager->persist($order);
+        $this->entityManager->flush();
 
         return $order;
     }

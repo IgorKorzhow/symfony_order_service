@@ -31,7 +31,6 @@ final class OrderControllerChangeOrderStatusTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(200);
 
-        $this->assertArrayHasKey('orderItems', $data);
         $this->assertArrayHasKey('createdAt', $data);
         $this->assertArrayHasKey('id', $data);
         $this->assertArrayHasKey('totalPrice', $data);

@@ -2,9 +2,10 @@
 
 namespace App\Controller;
 
-use App\Dto\Order\OrderDto;
+use App\Dto\RequestDto\Order\OrderChangeStatusRequestDto;
+use App\Dto\RequestDto\Order\OrderCreateRequestDto;
+use App\Dto\ResponseDto\Order\OrderResponseDto;
 use App\Entity\Order;
-use App\Enum\OrderStatusEnum;
 use App\Exception\DtoValidationException;
 use App\Exception\UnknownEnumTypeException;
 use App\Exception\ValidationException;
@@ -15,17 +16,14 @@ use App\Service\Payment\PaymentServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class OrderController extends AbstractController
 {
     public function __construct(
-        private readonly SerializerInterface $serializer,
         private readonly BasketServiceInterface $basketService,
         private readonly OrderService $orderService,
         private readonly OrderInspector $orderInspector,
@@ -40,25 +38,28 @@ final class OrderController extends AbstractController
      * @throws ExceptionInterface
      */
     #[Route(path: '/api/order', name: 'order.create', methods: ['POST'])]
-    public function createOrder(OrderDto $orderDto, ValidatorInterface $validator): JsonResponse
+    public function createOrder(
+        #[MapRequestPayload]
+        OrderCreateRequestDto $requestDto
+    ): JsonResponse
     {
         $user = $this->getUser();
 
         $basket = $this->basketService->getBasket($user->getId());
 
-        $orderDto->setBasket($basket);
-        $orderDto->setUserId($user->getId());
-        $orderDto->validate($validator);
-
-        $order = $this->orderService->createOrder($orderDto);
+        $order = $this->orderService->createOrder($requestDto, $basket);
 
         return new JsonResponse(
-            $this->serializer->normalize($order, 'json',
-                [
-                'groups' => ['order:read', 'order_item:read']
-                ]
+            data: new OrderResponseDto(
+                id: $order->getId(),
+                createdAt: $order->getCreatedAt(),
+                payedAt: $order->getPayedAt(),
+                totalPrice: $order->getTotalPrice(),
+                orderStatus: $order->getOrderStatus(),
+                deliveryType: $order->getDeliveryType(),
+                userId: $order->getUserId(),
             ),
-            Response::HTTP_CREATED,
+            status: Response::HTTP_CREATED,
         );
     }
 
@@ -68,14 +69,12 @@ final class OrderController extends AbstractController
      * @throws ExceptionInterface
      */
     #[Route(path: '/api/order/{id}/change-status', name: 'order.update', methods: ['PUT'])]
-    public function changeOrderStatus(Order $order, Request $request): JsonResponse
+    public function changeOrderStatus(
+        Order $order,
+        #[MapRequestPayload]
+        OrderChangeStatusRequestDto $requestDto
+    ): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-
-        if (!isset($data['orderStatus']) || !OrderStatusEnum::hasValue($data['orderStatus'])) {
-            throw new ValidationException('Order status is missing or invalid');
-        }
-
         if (!$this->orderInspector->canChangeAdminOrderStatus()) {
             return new JsonResponse(
                 [
@@ -85,11 +84,19 @@ final class OrderController extends AbstractController
             );
         }
 
-        $order = $this->orderService->changeOrderStatus($order, $data['orderStatus']);
+        $order = $this->orderService->changeOrderStatus($order, $requestDto->orderStatus);
 
         return new JsonResponse(
-            $this->serializer->normalize($order, 'json'),
-            Response::HTTP_OK,
+            data: new OrderResponseDto(
+                id: $order->getId(),
+                createdAt: $order->getCreatedAt(),
+                payedAt: $order->getPayedAt(),
+                totalPrice: $order->getTotalPrice(),
+                orderStatus: $order->getOrderStatus(),
+                deliveryType: $order->getDeliveryType(),
+                userId: $order->getUserId(),
+            ),
+            status: Response::HTTP_OK,
         );
     }
 
@@ -101,7 +108,7 @@ final class OrderController extends AbstractController
         if (!$this->orderInspector->canPay($user, $order)) {
             return new JsonResponse(
                 [
-                    'message' => "You cannot change order status. You hasn't role admin",
+                    'message' => "You cannot pay this order. This isnt your order",
                 ],
                 Response::HTTP_FORBIDDEN,
             );

@@ -2,13 +2,11 @@
 
 namespace App\Repository;
 
-use App\Dto\Product\ProductQueryDto;
 use App\Entity\Product;
 use App\Enum\OrderStatusEnum;
 use App\Service\Paginator\PaginatedListEntity;
 use App\Service\Paginator\PaginateQueryService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 

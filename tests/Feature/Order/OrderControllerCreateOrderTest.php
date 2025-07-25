@@ -59,9 +59,8 @@ final class OrderControllerCreateOrderTest extends WebTestCase
             $basketProductDto = new BasketProduct(
                 productId: $product->getId(),
                 count: $productsCount,
+                price: 0
             );
-
-            $basketProductDto->setPrice($product->getCost());
 
             $dto->addProduct($basketProductDto);
         }
@@ -90,7 +89,6 @@ final class OrderControllerCreateOrderTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(201);
 
-        $this->assertArrayHasKey('orderItems', $data);
         $this->assertArrayHasKey('createdAt', $data);
         $this->assertArrayHasKey('id', $data);
         $this->assertArrayHasKey('totalPrice', $data);

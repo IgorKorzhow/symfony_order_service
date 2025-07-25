@@ -9,7 +9,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: '`order`')]
@@ -18,34 +17,27 @@ class Order
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['order:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['order:read'])]
     private \DateTimeImmutable $createdAt;
 
     #[ORM\Column(nullable: true)]
-    private ?\DateTimeImmutable $payedAt;
+    private ?\DateTimeImmutable $payedAt = null;
 
     #[ORM\Column]
-    #[Groups(['order:read'])]
     private float $totalPrice = 0;
 
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'order', cascade: ['persist'], orphanRemoval: true)]
-    #[Groups(['order:read'])]
     private Collection $orderItems;
 
     #[ORM\Column(type: Types::STRING, enumType: OrderStatusEnum::class)]
-    #[Groups(['order:read'])]
     private OrderStatusEnum $orderStatus;
 
     #[ORM\Column(type: Types::STRING, enumType: DeliveryTypeEnum::class)]
-    #[Groups(['order:read'])]
     private DeliveryTypeEnum $deliveryType;
 
     #[ORM\Column]
-    #[Groups(['order:read'])]
     private int|string $userId;
 
     public function __construct()
@@ -115,7 +107,7 @@ class Order
         $this->userId = $userId;
     }
 
-    public function getPayedAt(): \DateTimeImmutable
+    public function getPayedAt(): ?\DateTimeImmutable
     {
         return $this->payedAt;
     }
