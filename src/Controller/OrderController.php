@@ -6,9 +6,7 @@ use App\Dto\RequestDto\Order\OrderChangeStatusRequestDto;
 use App\Dto\RequestDto\Order\OrderCreateRequestDto;
 use App\Dto\ResponseDto\Order\OrderResponseDto;
 use App\Entity\Order;
-use App\Exception\DtoValidationException;
 use App\Exception\UnknownEnumTypeException;
-use App\Exception\ValidationException;
 use App\Inspectors\OrderInspector;
 use App\Service\Basket\BasketServiceInterface;
 use App\Service\Order\OrderService;
@@ -33,7 +31,6 @@ final class OrderController extends AbstractController
     }
 
     /**
-     * @throws DtoValidationException
      * @throws UnknownEnumTypeException
      * @throws ExceptionInterface
      */
@@ -65,8 +62,6 @@ final class OrderController extends AbstractController
 
     /**
      * @throws UnknownEnumTypeException
-     * @throws ValidationException
-     * @throws ExceptionInterface
      */
     #[Route(path: '/api/order/{id}/change-status', name: 'order.update', methods: ['PUT'])]
     public function changeOrderStatus(

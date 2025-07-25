@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Dto\Mappers\Basket\BasketDtoMapper;
 use App\Dto\RequestDto\Basket\BasketChangeProductRequestDto;
 use App\Entity\BasketProduct;
-use App\Exception\DtoValidationException;
 use App\Repository\ProductRepository;
 use App\Service\Basket\BasketServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -40,7 +39,6 @@ final class BasketController extends AbstractController
 
     /**
      * @throws ExceptionInterface
-     * @throws DtoValidationException
      */
     #[Route('/api/basket/products', name: 'basket_products_change', methods: ['PATCH'])]
     public function changeProduct(
