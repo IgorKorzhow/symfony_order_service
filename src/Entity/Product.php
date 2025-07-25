@@ -36,7 +36,7 @@ class Product
     private ?int $version = null;
 
     #[ORM\Column(type: Types::INTEGER, unique: true)]
-    private ?int $external_id = null;
+    private ?int $externalId = null;
 
     #[ORM\OneToMany(targetEntity: OrderItem::class, mappedBy: 'product')]
     private Collection $orderItems;
@@ -129,12 +129,12 @@ class Product
 
     public function getExternalId(): ?int
     {
-        return $this->external_id;
+        return $this->externalId;
     }
 
-    public function setExternalId(int $external_id): static
+    public function setExternalId(int $externalId): static
     {
-        $this->external_id = $external_id;
+        $this->externalId = $externalId;
 
         return $this;
     }

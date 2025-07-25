@@ -2,8 +2,8 @@
 
 namespace App\Tests\Feature\Basket;
 
-use App\Dto\Basket\BasketDto;
-use App\Dto\Basket\BasketProductDto;
+use App\Entity\Basket;
+use App\Entity\BasketProduct;
 use App\Factory\Entity\ProductFactory;
 use App\Tests\Helpers\Helpers;
 use App\Tests\Override\Interface\TestCacheResetInterface;
@@ -32,16 +32,17 @@ final class BasketControllerChangeProductTest extends WebTestCase
 
         $this->cacheMock->method('get')
             ->willReturnOnConsecutiveCalls(
-                new BasketDto(
+                new Basket(
                     userId: 1,
                     products: [],
                 ),
-                new BasketDto(
+                new Basket(
                     userId: 1,
                     products: [
-                        new BasketProductDto(
+                        new BasketProduct(
                             productId: 1,
-                            count: 10
+                            count: 10,
+                            price: 0
                         ),
                     ],
                 )

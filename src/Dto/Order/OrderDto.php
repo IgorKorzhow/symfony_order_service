@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace App\Dto\Order;
 
 use App\Dto\AbstractValidationDto;
-use App\Dto\Basket\BasketDto;
-use App\Dto\Basket\BasketProductDto;
+use App\Entity\Basket;
+use App\Entity\BasketProduct;
 use App\Enum\DeliveryTypeEnum;
 use App\Enum\OrderStatusEnum;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -16,7 +16,7 @@ class OrderDto extends AbstractValidationDto
 {
     #[Assert\NotNull]
     #[Assert\Valid]
-    private ?BasketDto $basket;
+    private ?Basket $basket;
 
     #[Assert\NotBlank]
     #[Assert\Choice(callback: [DeliveryTypeEnum::class, 'values'])]
@@ -43,12 +43,12 @@ class OrderDto extends AbstractValidationDto
         $this->orderStatus = OrderStatusEnum::CREATED->value;
     }
 
-    public function getBasket(): ?BasketDto
+    public function getBasket(): ?Basket
     {
         return $this->basket;
     }
 
-    public function setBasket(BasketDto $basket): void
+    public function setBasket(Basket $basket): void
     {
         $this->basket = $basket;
     }
@@ -113,7 +113,7 @@ class OrderDto extends AbstractValidationDto
             );
         }
 
-        $totalProductsCount = array_reduce($this->getBasket()->getProducts(), function ($carry, BasketProductDto $product) {
+        $totalProductsCount = array_reduce($this->getBasket()->getProducts(), function ($carry, BasketProduct $product) {
             return $carry + $product->getCount();
         }, 0);
 

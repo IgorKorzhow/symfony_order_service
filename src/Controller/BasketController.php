@@ -2,25 +2,24 @@
 
 namespace App\Controller;
 
-use App\Dto\Basket\BasketProductDto;
+use App\Dto\Mappers\Basket\BasketDtoMapper;
+use App\Dto\RequestDto\Basket\BasketChangeProductRequestDto;
+use App\Entity\BasketProduct;
 use App\Exception\DtoValidationException;
 use App\Repository\ProductRepository;
 use App\Service\Basket\BasketServiceInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class BasketController extends AbstractController
 {
     public function __construct(
         private readonly ProductRepository $productRepository,
         private readonly BasketServiceInterface $basketService,
-        private readonly SerializerInterface $serializer,
-        private readonly ValidatorInterface $validator,
     )
     {
     }
@@ -29,11 +28,14 @@ final class BasketController extends AbstractController
      * @throws ExceptionInterface
      */
     #[Route('/api/basket', name: 'index', methods: ['GET'])]
-    public function index(): JsonResponse
+    public function index(BasketDtoMapper $basketDtoMapper): JsonResponse
     {
         $basket = $this->basketService->getBasket($this->getUser()->getId());
 
-        return new JsonResponse($this->serializer->normalize($basket, 'json'), Response::HTTP_OK);
+        return new JsonResponse(
+            data: $basketDtoMapper->entityToDto($basket),
+            status: Response::HTTP_OK,
+        );
     }
 
     /**
@@ -41,17 +43,28 @@ final class BasketController extends AbstractController
      * @throws DtoValidationException
      */
     #[Route('/api/basket/products', name: 'basket_products_change', methods: ['PATCH'])]
-    public function changeProduct(BasketProductDto $basketProduct): JsonResponse
+    public function changeProduct(
+        #[MapRequestPayload]
+        BasketChangeProductRequestDto $requestDto,
+        BasketDtoMapper $basketDtoMapper,
+    ): JsonResponse
     {
-        $basketProduct->validate($this->validator);
-
-        $product = $this->productRepository->findOneBy(['id' => $basketProduct->getProductId()]);
-
-        $basketProduct->setPrice($product->getCost());
-
         $basket = $this->basketService->getBasket($this->getUser()->getId());
-        $basket = $this->basketService->changeProduct($basket, $basketProduct);
 
-        return new JsonResponse($this->serializer->normalize($basket, 'json'), Response::HTTP_OK);
+        $product = $this->productRepository->findOneBy(['id' => $requestDto->productId]);
+
+        $basket = $this->basketService->changeProduct(
+            basket: $basket,
+            basketProduct: new BasketProduct(
+                productId: $requestDto->productId,
+                count: $requestDto->count,
+                price: $product->getCost(),
+            ),
+        );
+
+        return new JsonResponse(
+            data: $basketDtoMapper->entityToDto($basket),
+            status: Response::HTTP_OK,
+        );
     }
 }

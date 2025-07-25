@@ -2,8 +2,8 @@
 
 namespace App\Service\Order;
 
-use App\Dto\Basket\BasketProductDto;
 use App\Dto\Order\OrderDto;
+use App\Entity\BasketProduct;
 use App\Entity\Order;
 use App\Entity\OrderItem;
 use App\Enum\DeliveryTypeEnum;
@@ -42,7 +42,7 @@ final readonly class OrderService
         $productsGroupedById = ArrayHelpers::groupBy($this->productRepository->findBy(['id' => $productIds]), 'id');
 
         foreach ($orderDto->getBasket()->getProducts() as $productDto) {
-            /** @var BasketProductDto $product */
+            /** @var BasketProduct $product */
             $orderItem = new OrderItem();
 
             $orderItem->setProduct(ArrayHelpers::first($productsGroupedById[$productDto->getProductId()]));

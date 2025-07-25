@@ -2,37 +2,45 @@
 
 namespace App\Controller;
 
-use App\Dto\Product\ProductQueryDto;
+use App\Dto\Mappers\Product\ProductDtoMapper;
+use App\Dto\RequestDto\Product\ProductIndexRequestDto;
+use App\Dto\ResponseDto\PaginatedListEntityResponseDto;
 use App\Repository\ProductRepository;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class ProductController extends AbstractController
 {
     public function __construct(
-        private readonly ValidatorInterface $validator,
         private readonly ProductRepository $repository,
-        private readonly SerializerInterface $serializer,
     )
     {
     }
 
     /**
-     * @throws ExceptionInterface
-     * @throws \Exception
+     * @throws Exception
      */
     #[Route('/api/products', name: 'products')]
-    public function index(ProductQueryDto $dto): JsonResponse
+    public function index(
+        #[MapQueryString]
+        ProductIndexRequestDto $requestDto,
+        ProductDtoMapper $productDtoMapper,
+    ): JsonResponse
     {
-        $dto->validate($this->validator);
+        $paginatedEntityData = $this->repository->getPaginated($requestDto->page, $requestDto->perPage);
 
         return new JsonResponse(
-            data: $this->serializer->normalize($this->repository->getPaginated($dto->getPage(), $dto->getPerPage()), 'json'),
+            data: new PaginatedListEntityResponseDto(
+                page: $paginatedEntityData->getPage(),
+                perPage: $paginatedEntityData->getPerPage(),
+                total: $paginatedEntityData->getTotal(),
+                data: $productDtoMapper->arrayEntityToDto($paginatedEntityData->getData()),
+                totalPages:  $paginatedEntityData->getTotalPages(),
+            ),
             status: Response::HTTP_OK
         );
     }

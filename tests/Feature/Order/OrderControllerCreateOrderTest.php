@@ -2,8 +2,8 @@
 
 namespace App\Tests\Feature\Order;
 
-use App\Dto\Basket\BasketDto;
-use App\Dto\Basket\BasketProductDto;
+use App\Entity\Basket;
+use App\Entity\BasketProduct;
 use App\Entity\Product;
 use App\Exception\Basket\ProductAlreadyExistsException;
 use App\Exception\Basket\ProductPriceNotFoundException;
@@ -11,7 +11,6 @@ use App\Factory\Entity\ProductFactory;
 use App\Tests\Helpers\Helpers;
 use App\Tests\Override\Interface\TestCacheResetInterface;
 use JetBrains\PhpStorm\NoReturn;
-use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\MockObject\Exception;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -51,13 +50,13 @@ final class OrderControllerCreateOrderTest extends WebTestCase
      * @throws ProductAlreadyExistsException
      * @throws ProductPriceNotFoundException
      */
-    private function createBasketDto(int $userId, array $products, int $productsCount = 3): BasketDto
+    private function createBasketDto(int $userId, array $products, int $productsCount = 3): Basket
     {
-        $dto = new BasketDto(userId: $userId);
+        $dto = new Basket(userId: $userId);
 
         foreach ($products as $product) {
             /** @var $product Product */
-            $basketProductDto = new BasketProductDto(
+            $basketProductDto = new BasketProduct(
                 productId: $product->getId(),
                 count: $productsCount,
             );

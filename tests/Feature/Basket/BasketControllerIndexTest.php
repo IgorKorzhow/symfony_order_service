@@ -2,7 +2,7 @@
 
 namespace App\Tests\Feature\Basket;
 
-use App\Dto\Basket\BasketDto;
+use App\Entity\Basket;
 use App\Tests\Helpers\Helpers;
 use App\Tests\Override\Interface\TestCacheResetInterface;
 use PHPUnit\Framework\Attributes\DataProvider;
@@ -29,7 +29,7 @@ final class BasketControllerIndexTest extends WebTestCase
 
         $this->cacheMock->method('get')
             ->willReturnOnConsecutiveCalls(
-                new BasketDto(
+                new Basket(
                     userId: 1,
                     products: [],
                 )

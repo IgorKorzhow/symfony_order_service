@@ -2,8 +2,8 @@
 
 namespace App\Tests\Unit\Service;
 
-use App\Dto\Basket\BasketDto;
-use App\Dto\Basket\BasketProductDto;
+use App\Entity\Basket;
+use App\Entity\BasketProduct;
 use App\Service\Basket\BasketInCacheService;
 use PHPUnit\Framework\TestCase;
 use Symfony\Contracts\Cache\CacheInterface;
@@ -23,7 +23,7 @@ class BasketInCacheServiceTest extends TestCase
     {
         $userId = 123;
         $basketKey = 'basket_123';
-        $expectedBasket = new BasketDto($userId);
+        $expectedBasket = new Basket($userId);
 
         $this->cache->expects($this->once())
             ->method('get')
@@ -31,7 +31,7 @@ class BasketInCacheServiceTest extends TestCase
                 $basketKey,
                 $this->callback(function ($callback) use ($userId) {
                     $basket = $callback();
-                    return $basket instanceof BasketDto
+                    return $basket instanceof Basket
                         && $basket->getUserId() === $userId
                         && empty($basket->getProducts());
                 }),
@@ -48,8 +48,8 @@ class BasketInCacheServiceTest extends TestCase
     {
         $userId = 123;
         $basketKey = 'basket_123';
-        $initialBasket = new BasketDto($userId);
-        $product = new BasketProductDto(1, 2);
+        $initialBasket = new Basket($userId);
+        $product = new BasketProduct(1, 2);
         $product->setPrice(10.0);
 
         $this->cache->expects($this->once())
@@ -82,11 +82,11 @@ class BasketInCacheServiceTest extends TestCase
     {
         $userId = 123;
         $basketKey = 'basket_123';
-        $initialProduct = new BasketProductDto(1, 2);
+        $initialProduct = new BasketProduct(1, 2);
         $initialProduct->setPrice(10.0);
-        $initialBasket = (new BasketDto($userId))->addProduct($initialProduct);
+        $initialBasket = (new Basket($userId))->addProduct($initialProduct);
 
-        $updatedProduct = new BasketProductDto(1, 3);
+        $updatedProduct = new BasketProduct(1, 3);
         $updatedProduct->setPrice(15.0);
 
         $this->cache->expects($this->once())
@@ -120,9 +120,9 @@ class BasketInCacheServiceTest extends TestCase
     {
         $userId = 123;
         $basketKey = 'basket_123';
-        $product = new BasketProductDto(1, 2);
+        $product = new BasketProduct(1, 2);
         $product->setPrice(10.0);
-        $initialBasket = (new BasketDto($userId))->addProduct($product);
+        $initialBasket = (new Basket($userId))->addProduct($product);
 
         $this->cache->expects($this->once())
             ->method('delete')
@@ -154,8 +154,8 @@ class BasketInCacheServiceTest extends TestCase
     {
         $userId = 123;
         $basketKey = 'basket_123';
-        $initialBasket = new BasketDto($userId);
-        $product = new BasketProductDto(1, 2);
+        $initialBasket = new Basket($userId);
+        $product = new BasketProduct(1, 2);
         $product->setPrice(10.0);
 
         $this->cache->expects($this->once())
@@ -187,7 +187,7 @@ class BasketInCacheServiceTest extends TestCase
     {
         $userId = 123;
         $basketKey = 'basket_123';
-        $basket = new BasketDto($userId);
+        $basket = new Basket($userId);
 
         $this->cache->expects($this->once())
             ->method('delete')

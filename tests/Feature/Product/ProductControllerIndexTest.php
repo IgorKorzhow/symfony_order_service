@@ -38,7 +38,6 @@ final class ProductControllerIndexTest extends WebTestCase
                     [
                         'cost' => 12345,
                         'description' => 'This is a sample product description.',
-                        'external_id' => 67890,
                         'measurements' => new Measurement(
                             10,
                             20,
@@ -52,7 +51,6 @@ final class ProductControllerIndexTest extends WebTestCase
                     [
                         'cost' => 123452,
                         'description' => 'This is a sample product description.',
-                        'external_id' => 67892,
                         'measurements' => new Measurement(
                             10,
                             20,
@@ -73,7 +71,6 @@ final class ProductControllerIndexTest extends WebTestCase
                         [
                             'cost' => 123452,
                             'description' => 'This is a sample product description.',
-                            'externalId' => 67892,
                             'measurements' => [
                                 'weight' => 10,
                                 'height' => 20,
@@ -87,7 +84,6 @@ final class ProductControllerIndexTest extends WebTestCase
                         [
                             'cost' => 12345,
                             'description' => 'This is a sample product description.',
-                            'externalId' => 67890,
                             'measurements' => [
                                 'weight' => 10,
                                 'height' => 20,

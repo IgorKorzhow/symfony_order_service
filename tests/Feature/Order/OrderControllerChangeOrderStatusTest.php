@@ -2,20 +2,10 @@
 
 namespace App\Tests\Feature\Order;
 
-use App\Dto\Basket\BasketDto;
-use App\Dto\Basket\BasketProductDto;
-use App\Entity\Product;
-use App\Exception\Basket\ProductAlreadyExistsException;
-use App\Exception\Basket\ProductPriceNotFoundException;
 use App\Factory\Entity\OrderFactory;
-use App\Factory\Entity\ProductFactory;
 use App\Tests\Helpers\Helpers;
-use App\Tests\Override\Interface\TestCacheResetInterface;
 use JetBrains\PhpStorm\NoReturn;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\MockObject\Exception;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-use Symfony\Contracts\Cache\CacheInterface;
 use Zenstruck\Foundry\Test\Factories;
 
 final class OrderControllerChangeOrderStatusTest extends WebTestCase

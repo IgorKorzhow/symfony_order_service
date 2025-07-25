@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 namespace App\Service\Basket;
 
-use App\Dto\Basket\BasketDto;
-use App\Dto\Basket\BasketProductDto;
+use App\Entity\Basket;
+use App\Entity\BasketProduct;
 use App\Exception\Basket\ProductDoesntExistsException;
 use Exception;
 use Psr\Cache\InvalidArgumentException;
@@ -23,20 +23,20 @@ final class BasketInCacheService implements BasketServiceInterface
     /**
      * @throws InvalidArgumentException
      */
-    public function getBasket(int|string $userId): BasketDto
+    public function getBasket(int|string $userId): Basket
     {
         $basketKey = $this->getBasketKey($userId);
 
-        return $this->cache->get($basketKey, fn() => new BasketDto(userId: $userId), self::CACHE_TTL);
+        return $this->cache->get($basketKey, fn() => new Basket(userId: $userId), self::CACHE_TTL);
     }
 
     /**
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function addProduct(BasketDto $basket, BasketProductDto $basketProduct): BasketDto
+    public function addProduct(Basket $basket, BasketProduct $basketProduct): Basket
     {
-        $userId = $basket->getUserId();
+        $userId = $basket->userId;
 
         $basketKey = $this->getBasketKey($userId);
 
@@ -56,9 +56,9 @@ final class BasketInCacheService implements BasketServiceInterface
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function updateProduct(BasketDto $basket, BasketProductDto $basketProduct): BasketDto
+    public function updateProduct(Basket $basket, BasketProduct $basketProduct): Basket
     {
-        $userId = $basket->getUserId();
+        $userId = $basket->userId;
 
         $basketKey = $this->getBasketKey($userId);
 
@@ -77,9 +77,9 @@ final class BasketInCacheService implements BasketServiceInterface
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function deleteProduct(BasketDto $basket, BasketProductDto $basketProduct): BasketDto
+    public function deleteProduct(Basket $basket, BasketProduct $basketProduct): Basket
     {
-        $userId = $basket->getUserId();
+        $userId = $basket->userId;
 
         $basketKey = $this->getBasketKey($userId);
 
@@ -98,9 +98,9 @@ final class BasketInCacheService implements BasketServiceInterface
      * @throws InvalidArgumentException
      * @throws Exception
      */
-    public function changeProduct(BasketDto $basket, BasketProductDto $basketProduct): BasketDto
+    public function changeProduct(Basket $basket, BasketProduct $basketProduct): Basket
     {
-        $userId = $basket->getUserId();
+        $userId = $basket->userId;
 
         $basketKey = $this->getBasketKey($userId);
 
@@ -123,9 +123,9 @@ final class BasketInCacheService implements BasketServiceInterface
     /**
      * @throws InvalidArgumentException
      */
-    public function deleteBasket(BasketDto $basket): bool
+    public function deleteBasket(Basket $basket): bool
     {
-        $basketKey = $this->getBasketKey($basket->getUserId());
+        $basketKey = $this->getBasketKey($basket->userId);
 
         return $this->cache->delete($basketKey);
     }
