@@ -32,8 +32,8 @@ class BasketInCacheServiceTest extends TestCase
                 $this->callback(function ($callback) use ($userId) {
                     $basket = $callback();
                     return $basket instanceof Basket
-                        && $basket->getUserId() === $userId
-                        && empty($basket->getProducts());
+                        && $basket->userId === $userId
+                        && empty($basket->products);
                 }),
                 86400
             )
@@ -49,8 +49,7 @@ class BasketInCacheServiceTest extends TestCase
         $userId = 123;
         $basketKey = 'basket_123';
         $initialBasket = new Basket($userId);
-        $product = new BasketProduct(1, 2);
-        $product->setPrice(10.0);
+        $product = new BasketProduct(1, 2, 10);
 
         $this->cache->expects($this->once())
             ->method('delete')
@@ -63,9 +62,9 @@ class BasketInCacheServiceTest extends TestCase
                 $basketKey,
                 $this->callback(function ($callback) use ($product) {
                     $basket = $callback();
-                    return count($basket->getProducts()) === 1
-                        && $basket->getProducts()[0]->getProductId() === $product->getProductId()
-                        && $basket->getTotalPrice() === 20.0;
+                    return count($basket->products) === 1
+                        && $basket->products[0]->productId === $product->productId
+                        && $basket->totalPrice === 20.0;
                 }),
                 86400
             )
@@ -75,19 +74,17 @@ class BasketInCacheServiceTest extends TestCase
 
         $result = $this->basketService->addProduct($initialBasket, $product);
 
-        $this->assertCount(1, $result->getProducts());
-        $this->assertEquals(20.0, $result->getTotalPrice());
+        $this->assertCount(1, $result->products);
+        $this->assertEquals(20.0, $result->totalPrice);
     }
     public function testUpdateProduct(): void
     {
         $userId = 123;
         $basketKey = 'basket_123';
-        $initialProduct = new BasketProduct(1, 2);
-        $initialProduct->setPrice(10.0);
+        $initialProduct = new BasketProduct(1, 2, 10);
         $initialBasket = (new Basket($userId))->addProduct($initialProduct);
 
-        $updatedProduct = new BasketProduct(1, 3);
-        $updatedProduct->setPrice(15.0);
+        $updatedProduct = new BasketProduct(1, 3, 15);
 
         $this->cache->expects($this->once())
             ->method('delete')
@@ -100,9 +97,9 @@ class BasketInCacheServiceTest extends TestCase
                 $basketKey,
                 $this->callback(function ($callback) use ($updatedProduct) {
                     $basket = $callback();
-                    $product = $basket->getProducts()[0];
-                    return $product->getCount() === $updatedProduct->getCount()
-                        && $basket->getTotalPrice() === 45.0;
+                    $product = $basket->products[0];
+                    return $product->count === $updatedProduct->count
+                        && $basket->totalPrice === 45.0;
                 }),
                 86400
             )
@@ -112,16 +109,15 @@ class BasketInCacheServiceTest extends TestCase
 
         $result = $this->basketService->updateProduct($initialBasket, $updatedProduct);
 
-        $this->assertEquals(3, $result->getProducts()[0]->getCount());
-        $this->assertEquals(45.0, $result->getTotalPrice());
+        $this->assertEquals(3, $result->products[0]->count);
+        $this->assertEquals(45.0, $result->totalPrice);
     }
 
     public function testDeleteProduct(): void
     {
         $userId = 123;
         $basketKey = 'basket_123';
-        $product = new BasketProduct(1, 2);
-        $product->setPrice(10.0);
+        $product = new BasketProduct(1, 2, 10);
         $initialBasket = (new Basket($userId))->addProduct($product);
 
         $this->cache->expects($this->once())
@@ -135,8 +131,8 @@ class BasketInCacheServiceTest extends TestCase
                 $basketKey,
                 $this->callback(function ($callback) {
                     $basket = $callback();
-                    return count($basket->getProducts()) === 0
-                        && $basket->getTotalPrice() === 0.0;
+                    return count($basket->products) === 0
+                        && $basket->totalPrice === 0.0;
                 }),
                 86400
             )
@@ -146,8 +142,8 @@ class BasketInCacheServiceTest extends TestCase
 
         $result = $this->basketService->deleteProduct($initialBasket, $product);
 
-        $this->assertCount(0, $result->getProducts());
-        $this->assertEquals(0.0, $result->getTotalPrice());
+        $this->assertCount(0, $result->products);
+        $this->assertEquals(0.0, $result->totalPrice);
     }
 
     public function testChangeProductAddNewWhenCountPositive(): void
@@ -155,8 +151,7 @@ class BasketInCacheServiceTest extends TestCase
         $userId = 123;
         $basketKey = 'basket_123';
         $initialBasket = new Basket($userId);
-        $product = new BasketProduct(1, 2);
-        $product->setPrice(10.0);
+        $product = new BasketProduct(1, 2, 10);
 
         $this->cache->expects($this->once())
             ->method('delete')
@@ -169,8 +164,8 @@ class BasketInCacheServiceTest extends TestCase
                 $basketKey,
                 $this->callback(function ($callback) use ($product) {
                     $basket = $callback();
-                    return count($basket->getProducts()) === 1
-                        && $basket->getTotalPrice() === 20.0;
+                    return count($basket->products) === 1
+                        && $basket->totalPrice === 20.0;
                 }),
                 86400
             )
@@ -180,7 +175,7 @@ class BasketInCacheServiceTest extends TestCase
 
         $result = $this->basketService->changeProduct($initialBasket, $product);
 
-        $this->assertCount(1, $result->getProducts());
+        $this->assertCount(1, $result->products);
     }
 
     public function testDeleteBasket(): void

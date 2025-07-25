@@ -2,39 +2,49 @@
 
 namespace App\Controller;
 
-use App\Dto\Report\ReportDto;
-use App\Exception\DtoValidationException;
+use App\Dto\RequestDto\Report\ReportOrderGenerationRequestDto;
+use App\Dto\ResponseDto\Report\ReportResponseDto;
 use App\Exception\UnknownEnumTypeException;
 use App\Service\Report\ReportService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class ReportController extends AbstractController
 {
     public function __construct(
-        private readonly SerializerInterface $serializer,
-        private readonly ValidatorInterface $validator,
         private readonly ReportService $reportService,
     )
     {
     }
 
     /**
-     * @throws DtoValidationException
      * @throws UnknownEnumTypeException
-     * @throws ExceptionInterface|\Symfony\Component\Serializer\Exception\ExceptionInterface
+     * @throws ExceptionInterface
      */
-    #[Route('/api/report', name: 'report', methods: ['POST'])]
-    public function store(ReportDto $reportDto)
+    #[Route('/api/report/order-generation', name: 'report', methods: ['POST'])]
+    public function orderReportGeneration(
+        #[MapRequestPayload]
+        ReportOrderGenerationRequestDto $requestDto
+    ): JsonResponse
     {
-        $reportDto->validate($this->validator);
+        $report = $this->reportService->orderReportGeneration($requestDto);
 
-        $report = $this->reportService->orderReportGeneration($reportDto);
-
-        return $this->json($this->serializer->normalize($report, 'json'), Response::HTTP_CREATED);
+        return new JsonResponse(
+            data: new ReportResponseDto(
+                id: $report->getId(),
+                reportType: $report->getReportType(),
+                status: $report->getStatus(),
+                detail: $report->getDetail(),
+                filePath: $report->getFilePath(),
+                dateFrom: $report->getDateFrom(),
+                dateTo: $report->getDateTo(),
+                createdAt: $report->getCreatedAt(),
+            ),
+            status: Response::HTTP_CREATED,
+        );
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Service\Report;
 
 use App\Dto\Report\ReportDto;
+use App\Dto\RequestDto\Report\ReportOrderGenerationRequestDto;
 use App\Entity\Report;
 use App\Entity\ReportDetail;
 use App\Enum\ReportStatusEnum;
@@ -27,14 +28,14 @@ final readonly class ReportService
      * @throws UnknownEnumTypeException
      * @throws ExceptionInterface
      */
-    public function orderReportGeneration(ReportDto $reportDto): Report
+    public function orderReportGeneration(ReportOrderGenerationRequestDto $requestDto): Report
     {
         $report = new Report();
 
-        $report->setReportType(ReportTypeEnum::typeByString($reportDto->getReportType()));
+        $report->setReportType(ReportTypeEnum::typeByString($requestDto->reportType));
         $report->setStatus(ReportStatusEnum::CREATED);
-        $report->setDateFrom($reportDto->getDateFrom());
-        $report->setDateTo($reportDto->getDateTo());
+        $report->setDateFrom($requestDto->dateFrom);
+        $report->setDateTo($requestDto->dateTo);
 
         $this->reportRepository->store($report);
 
@@ -47,18 +48,18 @@ final readonly class ReportService
 
     public function generateReport(Report $report): Report
     {
-//        try {
+        try {
             $reportGenerator = $this->reportGeneratorFactory->make($report->getReportType());
 
             $report = $reportGenerator->generate($report);
             $report->setStatus(ReportStatusEnum::SUCCESS);
-//        } catch (\Throwable $e) {
-//            $report->setStatus(ReportStatusEnum::ERROR);
-//            $report->setDetail(new ReportDetail(
-//                message: $e->getMessage(),
-//                error: $e->getTraceAsString(),
-//            ));
-//        }
+        } catch (\Throwable $e) {
+            $report->setStatus(ReportStatusEnum::ERROR);
+            $report->setDetail(new ReportDetail(
+                message: $e->getMessage(),
+                error: $e->getTraceAsString(),
+            ));
+        }
 
         $this->reportRepository->flush();
 

@@ -32,7 +32,7 @@ class Report
 
     #[ORM\Column(type: Types::JSON, nullable: true)]
     #[Groups('json')]
-    private ?ReportDetail $detail;
+    private ?ReportDetail $detail = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups('json')]
