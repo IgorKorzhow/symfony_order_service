@@ -50,6 +50,6 @@ class PaginatedListEntity
 
     public function getTotalPages(): int
     {
-        return ceil($this->total / $this->perPage);
+        return (int) ceil($this->total / $this->perPage);
     }
 }

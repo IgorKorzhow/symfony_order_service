@@ -40,7 +40,7 @@ class Order
     private DeliveryTypeEnum $deliveryType;
 
     #[ORM\Column]
-    private int|string $userId;
+    private int $userId;
 
     public function __construct()
     {

@@ -13,7 +13,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 readonly class ProductCellFileReportGenerator implements ReportGeneratorInterface
 {
-    private const PATH = '/public/reports/';
+    private const PATH = '/public/reports';
 
     private const FILE_PREFIX = 'product_cell_';
 

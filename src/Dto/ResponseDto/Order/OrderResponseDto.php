@@ -13,7 +13,7 @@ class OrderResponseDto
         public int $id,
         public \DateTimeImmutable $createdAt,
         public ?\DateTimeImmutable $payedAt,
-        public int $totalPrice,
+        public float $totalPrice,
         public OrderStatusEnum $orderStatus,
         public DeliveryTypeEnum $deliveryType,
         public int $userId,

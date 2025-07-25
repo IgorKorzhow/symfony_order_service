@@ -25,7 +25,7 @@ class ExternalAuthUser implements UserInterface
 
     public function __construct(array $userData)
     {
-        $this->id = (string) $userData['id'];
+        $this->id = $userData['id'];
         $this->email = $userData['email'];
         $this->roles = $userData['roles'] ?? ['ROLE_USER'];
         $this->phone = $userData['phone'] ?? null;
