@@ -2,9 +2,7 @@
 
 namespace App\Entity;
 
-use App\Dto\AbstractValidationDto;
-
-class BasketProduct extends AbstractValidationDto
+class BasketProduct
 {
     public function __construct(
         public int $productId,
