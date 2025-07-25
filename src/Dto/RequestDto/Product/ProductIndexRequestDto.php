@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto\RequestDto\Product;
 
 use Symfony\Component\Validator\Constraints as Assert;
@@ -13,7 +15,6 @@ class ProductIndexRequestDto
         #[Assert\Type('integer')]
         #[Assert\GreaterThanOrEqual(1)]
         public int $perPage = 10,
-    )
-    {
+    ) {
     }
 }

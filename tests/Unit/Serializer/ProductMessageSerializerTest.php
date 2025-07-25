@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Serializer;
 
 use App\Factory\Message\ProductMessageFactory;
@@ -10,7 +12,6 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
-use InvalidArgumentException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ProductMessageSerializerTest extends TestCase
@@ -56,7 +57,7 @@ class ProductMessageSerializerTest extends TestCase
     {
         $envelope = new Envelope(new \stdClass());
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->serializer->encode($envelope);
     }
 
@@ -74,7 +75,7 @@ class ProductMessageSerializerTest extends TestCase
                 'height' => 20,
                 'length' => 30,
                 'weight' => 10,
-            ]
+            ],
         ];
 
         $json = json_encode($data);

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\Report\Generator;
 
 use App\Entity\OrderItem;
@@ -30,17 +32,17 @@ readonly class ProductCellFileReportGenerator implements ReportGeneratorInterfac
 
         $filesystem = new Filesystem();
 
-        if (!$filesystem->exists($this->projectDir.self::PATH)) {
-            $filesystem->mkdir($this->projectDir.self::PATH);
+        if (!$filesystem->exists($this->projectDir . self::PATH)) {
+            $filesystem->mkdir($this->projectDir . self::PATH);
         }
 
-        $fullPath = $this->projectDir.self::PATH.'/'.self::FILE_PREFIX.$report->getId();
+        $fullPath = $this->projectDir . self::PATH . '/' . self::FILE_PREFIX . $report->getId();
 
         foreach ($orderedProductsIterator as $orderedProduct) {
             /** @var Product $orderedProduct */
             $data = [];
             foreach ($orderedProduct->getOrderItems() as $orderItem) {
-                /** @var $orderItem OrderItem */
+                /* @var $orderItem OrderItem */
                 $data[] = [
                     'product_name' => $orderedProduct->getName(),
                     'price' => $orderItem->getPrice(),

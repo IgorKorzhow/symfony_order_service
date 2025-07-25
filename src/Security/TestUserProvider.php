@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use App\Entity\ExternalAuthUser;
@@ -8,7 +10,6 @@ use Symfony\Component\Security\Core\User\UserProviderInterface;
 
 class TestUserProvider implements UserProviderInterface
 {
-
     public function refreshUser(UserInterface $user): UserInterface
     {
         return $user;
@@ -16,7 +17,7 @@ class TestUserProvider implements UserProviderInterface
 
     public function supportsClass(string $class): bool
     {
-        return ExternalAuthUser::class === $class
+        return $class === ExternalAuthUser::class
             || is_subclass_of($class, ExternalAuthUser::class);
     }
 
@@ -30,7 +31,7 @@ class TestUserProvider implements UserProviderInterface
             'roles' => $roles,
             'phone' => '1234567',
             'name' => 'Test',
-            'token' => 'test token'
+            'token' => 'test token',
         ]);
     }
 }

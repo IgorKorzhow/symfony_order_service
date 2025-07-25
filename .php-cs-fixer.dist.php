@@ -8,10 +8,11 @@ $finder = (new PhpCsFixer\Finder())
 return (new PhpCsFixer\Config())
     ->setRules([
         '@PSR12' => true,
-        '@PSR2' => true,
-        '@PSR1' => true,
-
         '@Symfony' => true,
+
+        'declare_strict_types' => true,
+
+        'concat_space' => ['spacing' => 'one'],
 
         'yoda_style' => [
             'equal' => false,
@@ -20,5 +21,8 @@ return (new PhpCsFixer\Config())
         ],
 
         'psr_autoloading' => true,
+        'strict_comparison' => true,
+        'strict_param' => true,
     ])
-    ->setFinder($finder);
+    ->setFinder($finder)
+    ->setRiskyAllowed(true);

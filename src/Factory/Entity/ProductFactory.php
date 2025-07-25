@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Factory\Entity;
 
 use App\Entity\Product;
@@ -9,7 +11,8 @@ use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 /**
  * @extends PersistentProxyObjectFactory<Product>
  */
-final class ProductFactory extends PersistentProxyObjectFactory{
+final class ProductFactory extends PersistentProxyObjectFactory
+{
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
@@ -24,12 +27,13 @@ final class ProductFactory extends PersistentProxyObjectFactory{
         return Product::class;
     }
 
-        /**
+    /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
      *
      * @todo add your default values here
      */
-    protected function defaults(): array|callable    {
+    protected function defaults(): array|callable
+    {
         return [
             'cost' => self::faker()->randomNumber(),
             'description' => self::faker()->text(),
@@ -46,7 +50,7 @@ final class ProductFactory extends PersistentProxyObjectFactory{
         ];
     }
 
-        /**
+    /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
     protected function initialize(): static

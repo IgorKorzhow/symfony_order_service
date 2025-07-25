@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\Paginator;
 
 use Doctrine\ORM\QueryBuilder;
@@ -16,8 +18,7 @@ final class PaginateQueryService
             ->setFirstResult($limit * ($page - 1))
             ->setMaxResults($limit);
 
-
-        $paginator  = new Paginator($queryBuilder);
+        $paginator = new Paginator($queryBuilder);
 
         $totalItems = count($paginator);
 

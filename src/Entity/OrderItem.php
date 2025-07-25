@@ -1,9 +1,10 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Repository\OrderItemRepository;
-use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
 
@@ -35,14 +36,14 @@ class OrderItem
 
     #[ORM\Column(type: 'datetime_immutable')]
     #[Groups(['order_item:read'])]
-    private DateTimeImmutable $createdAt;
+    private \DateTimeImmutable $createdAt;
 
     public function __construct()
     {
-        $this->createdAt = new DateTimeImmutable();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
-    public function getCreatedAt(): DateTimeImmutable
+    public function getCreatedAt(): \DateTimeImmutable
     {
         return $this->createdAt;
     }
@@ -60,6 +61,7 @@ class OrderItem
     public function setOrder(?Order $order): self
     {
         $this->order = $order;
+
         return $this;
     }
 
@@ -71,6 +73,7 @@ class OrderItem
     public function setProduct(Product $product): self
     {
         $this->product = $product;
+
         return $this;
     }
 
@@ -82,6 +85,7 @@ class OrderItem
     public function setQuantity(int $quantity): self
     {
         $this->quantity = $quantity;
+
         return $this;
     }
 
@@ -93,6 +97,7 @@ class OrderItem
     public function setPrice(float $price): self
     {
         $this->price = $price;
+
         return $this;
     }
 

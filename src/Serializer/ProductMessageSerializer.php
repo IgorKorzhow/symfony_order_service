@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Serializer;
 
 use App\Factory\Message\ProductMessageFactory;
 use App\Message\Product\ProductMessage;
-use InvalidArgumentException;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
 use Symfony\Component\Messenger\Transport\Serialization\SerializerInterface;
@@ -13,8 +14,7 @@ readonly class ProductMessageSerializer implements SerializerInterface
 {
     public function __construct(
         private ProductMessageFactory $productMessageFactory,
-    )
-    {
+    ) {
     }
 
     public function decode(array $encodedEnvelope): Envelope
@@ -33,7 +33,7 @@ readonly class ProductMessageSerializer implements SerializerInterface
         $message = $envelope->getMessage();
 
         if (!$message instanceof ProductMessage) {
-            throw new InvalidArgumentException('Expected ProductMessage message');
+            throw new \InvalidArgumentException('Expected ProductMessage message');
         }
 
         $data = [
@@ -48,7 +48,7 @@ readonly class ProductMessageSerializer implements SerializerInterface
                 'height' => $message->getMeasurements()->getHeight(),
                 'length' => $message->getMeasurements()->getLength(),
                 'weight' => $message->getMeasurements()->getWeight(),
-            ]
+            ],
         ];
 
         return [

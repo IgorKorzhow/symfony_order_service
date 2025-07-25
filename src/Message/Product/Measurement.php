@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Message\Product;
 
 class Measurement
@@ -9,8 +11,7 @@ class Measurement
         private int $height,
         private int $width,
         private int $length,
-    )
-    {
+    ) {
     }
 
     public function getWeight(): int
@@ -63,4 +64,3 @@ class Measurement
         ];
     }
 }
-

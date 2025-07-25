@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto\ResponseDto;
 
 class PaginatedListEntityResponseDto
@@ -10,7 +12,6 @@ class PaginatedListEntityResponseDto
         public int $total,
         public array $data,
         public int $totalPages,
-    )
-    {
+    ) {
     }
 }

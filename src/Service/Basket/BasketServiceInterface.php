@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\Basket;
 
 use App\Entity\Basket;
@@ -8,6 +10,7 @@ use App\Entity\BasketProduct;
 interface BasketServiceInterface
 {
     public function getBasket(int|string $userId): Basket;
+
     public function deleteBasket(Basket $basket): bool;
 
     public function addProduct(Basket $basket, BasketProduct $basketProduct): Basket;

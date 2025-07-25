@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Feature\Order;
 
 use App\Factory\Entity\OrderFactory;
@@ -54,7 +56,6 @@ final class OrderControllerChangeOrderStatusTest extends WebTestCase
 
         $this->assertResponseStatusCodeSame(403);
     }
-
 
     public function testUnauthorized(): void
     {

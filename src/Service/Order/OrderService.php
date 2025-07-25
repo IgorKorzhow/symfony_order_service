@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\Order;
 
 use App\Dto\RequestDto\Order\OrderCreateRequestDto;
@@ -23,8 +25,7 @@ final readonly class OrderService
         private OrderRepository $orderRepository,
         private ProductRepository $productRepository,
         private EntityManagerInterface $entityManager,
-    )
-    {
+    ) {
     }
 
     /**
@@ -33,9 +34,7 @@ final readonly class OrderService
     public function createOrder(OrderCreateRequestDto $requestDto, Basket $basket): Order
     {
         if (count($basket->products) < 1) {
-            throw new OrderHasntProductsException(
-                "Basket must be at least 1 product"
-            );
+            throw new OrderHasntProductsException('Basket must be at least 1 product');
         }
 
         $totalProductsCount = array_reduce($basket->products, function ($carry, BasketProduct $product) {
@@ -43,9 +42,7 @@ final readonly class OrderService
         }, 0);
 
         if ($totalProductsCount > 20) {
-            throw new TooManyProductsInOrderException(
-                "Basket must be at most 20 products"
-            );
+            throw new TooManyProductsInOrderException('Basket must be at most 20 products');
         }
 
         $order = new Order();

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto\Mappers\Product;
 
 use App\Dto\Mappers\DtoMapperInterface;
@@ -9,10 +11,9 @@ use App\Entity\Product;
 
 class ProductDtoMapper implements DtoMapperInterface
 {
-
     public function entityToDto(object $entity): object
     {
-        /** @var Product $entity */
+        /* @var Product $entity */
         return new ProductResponseDto(
             id: $entity->getId(),
             name: $entity->getName(),
@@ -32,6 +33,6 @@ class ProductDtoMapper implements DtoMapperInterface
 
     public function arrayEntityToDto(array $data): array
     {
-        return array_map(fn(object $entity) => $this->entityToDto($entity), $data);
+        return array_map(fn (object $entity) => $this->entityToDto($entity), $data);
     }
 }

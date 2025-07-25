@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Dto\RequestDto\Order\OrderChangeStatusRequestDto;
@@ -26,8 +28,7 @@ final class OrderController extends AbstractController
         private readonly OrderService $orderService,
         private readonly OrderInspector $orderInspector,
         private readonly PaymentServiceInterface $paymentService,
-    )
-    {
+    ) {
     }
 
     /**
@@ -37,9 +38,8 @@ final class OrderController extends AbstractController
     #[Route(path: '/api/order', name: 'order.create', methods: ['POST'])]
     public function createOrder(
         #[MapRequestPayload]
-        OrderCreateRequestDto $requestDto
-    ): JsonResponse
-    {
+        OrderCreateRequestDto $requestDto,
+    ): JsonResponse {
         $user = $this->getUser();
 
         $basket = $this->basketService->getBasket($user->getId());
@@ -67,9 +67,8 @@ final class OrderController extends AbstractController
     public function changeOrderStatus(
         Order $order,
         #[MapRequestPayload]
-        OrderChangeStatusRequestDto $requestDto
-    ): JsonResponse
-    {
+        OrderChangeStatusRequestDto $requestDto,
+    ): JsonResponse {
         if (!$this->orderInspector->canChangeAdminOrderStatus()) {
             return new JsonResponse(
                 [
@@ -103,7 +102,7 @@ final class OrderController extends AbstractController
         if (!$this->orderInspector->canPay($user, $order)) {
             return new JsonResponse(
                 [
-                    'message' => "You cannot pay this order. This isnt your order",
+                    'message' => 'You cannot pay this order. This isnt your order',
                 ],
                 Response::HTTP_FORBIDDEN,
             );

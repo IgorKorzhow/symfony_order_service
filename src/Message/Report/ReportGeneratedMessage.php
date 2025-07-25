@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Message\Report;
 
 use App\Entity\ReportDetail;
@@ -46,6 +48,4 @@ class ReportGeneratedMessage
     {
         $this->detail = $detail;
     }
-
-
 }

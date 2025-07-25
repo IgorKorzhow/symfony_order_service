@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use App\Entity\ExternalAuthUser;
@@ -15,8 +17,7 @@ readonly class ExternalAuthUserProvider implements UserProviderInterface
 {
     public function __construct(
         private AuthService $authService,
-    )
-    {
+    ) {
     }
 
     /**
@@ -27,13 +28,13 @@ readonly class ExternalAuthUserProvider implements UserProviderInterface
      */
     public function refreshUser(UserInterface $user): UserInterface
     {
-        /** @var ExternalAuthUser $user */
+        /* @var ExternalAuthUser $user */
         return $this->authService->getUserByToken($user->getToken());
     }
 
     public function supportsClass(string $class): bool
     {
-        return ExternalAuthUser::class === $class
+        return $class === ExternalAuthUser::class
             || is_subclass_of($class, ExternalAuthUser::class);
     }
 

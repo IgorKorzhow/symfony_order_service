@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto\ResponseDto\Basket;
 
 class BasketResponseDto
@@ -9,7 +11,6 @@ class BasketResponseDto
         /** @var array<int, BasketProductResponseDto> $products */
         public array $products,
         public float $totalPrice,
-    )
-    {
+    ) {
     }
 }

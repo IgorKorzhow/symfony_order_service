@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Feature\Order;
 
 use App\Entity\Basket;
@@ -96,7 +98,6 @@ final class OrderControllerCreateOrderTest extends WebTestCase
         $this->assertArrayHasKey('deliveryType', $data);
         $this->assertArrayHasKey('userId', $data);
     }
-
 
     public function testUnauthorized(): void
     {

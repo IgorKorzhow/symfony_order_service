@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exception\Basket;
 
-use Exception;
-
-class ProductAlreadyExistsException extends Exception
+class ProductAlreadyExistsException extends \Exception
 {
 }

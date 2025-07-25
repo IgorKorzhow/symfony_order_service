@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Feature\Basket;
 
 use App\Entity\Basket;
@@ -38,11 +40,9 @@ final class BasketControllerIndexTest extends WebTestCase
         $this->client->getContainer()->set(CacheInterface::class, $this->cacheMock);
     }
 
-
     #[DataProvider('basketIndexDataProvider')]
     public function testIndex(array $basket): void
     {
-
         $this->client->request('GET', '/api/basket', server: [
             'HTTP_AUTHORIZATION' => 'ROLE_USER,ROLE_ADMIN',
         ]);
@@ -56,11 +56,11 @@ final class BasketControllerIndexTest extends WebTestCase
     public static function basketIndexDataProvider(): array
     {
         return [[
-                'basket' => [
-                    "userId" => 1,
-                    "products" => [],
-                    "totalPrice" => 0,
-            ]]
+            'basket' => [
+                'userId' => 1,
+                'products' => [],
+                'totalPrice' => 0,
+            ]],
         ];
     }
 

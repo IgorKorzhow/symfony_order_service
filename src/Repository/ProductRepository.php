@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Product;
@@ -8,7 +10,6 @@ use App\Service\Paginator\PaginatedListEntity;
 use App\Service\Paginator\PaginateQueryService;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Exception;
 
 /**
  * @extends ServiceEntityRepository<Product>
@@ -17,7 +18,7 @@ class ProductRepository extends ServiceEntityRepository
 {
     private readonly PaginateQueryService $paginateQueryService;
 
-    public function __construct(ManagerRegistry $registry,  PaginateQueryService $paginateQueryService)
+    public function __construct(ManagerRegistry $registry, PaginateQueryService $paginateQueryService)
     {
         parent::__construct($registry, Product::class);
 
@@ -33,7 +34,7 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function getPaginated(int $page, int $perPage): PaginatedListEntity
     {

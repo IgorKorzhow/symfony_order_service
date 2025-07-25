@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Feature\Basket;
 
 use App\Entity\Basket;
@@ -84,16 +86,16 @@ final class BasketControllerChangeProductTest extends WebTestCase
     public static function basketIndexDataProvider(): array
     {
         return [[
-                'basket' => [
-                    "userId" => 1,
-                    "products" => [
-                        [
-                            "count" => 10,
-                            "productId" => 1,
-                        ],
+            'basket' => [
+                'userId' => 1,
+                'products' => [
+                    [
+                        'count' => 10,
+                        'productId' => 1,
                     ],
-                    "totalPrice" => 0,
-            ]]
+                ],
+                'totalPrice' => 0,
+            ]],
         ];
     }
 

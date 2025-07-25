@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Dto\ResponseDto\Product;
+declare(strict_types=1);
 
-use DateTimeImmutable;
+namespace App\Dto\ResponseDto\Product;
 
 class ProductResponseDto
 {
@@ -14,8 +14,7 @@ class ProductResponseDto
         public ?int $cost,
         public ?int $tax,
         public ?int $version,
-        public DateTimeImmutable $createdAt,
-    )
-    {
+        public \DateTimeImmutable $createdAt,
+    ) {
     }
 }

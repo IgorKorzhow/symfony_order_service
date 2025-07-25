@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Service\Report;
 
 use App\Dto\RequestDto\Report\ReportOrderGenerationRequestDto;

@@ -1,11 +1,12 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Validator;
 
-use Attribute;
 use Symfony\Component\Validator\Constraint;
 
-#[Attribute]
+#[\Attribute]
 class ExistsEntityByField extends Constraint
 {
     public string $message = 'Entity with value "{{ value }}" does not exist.';

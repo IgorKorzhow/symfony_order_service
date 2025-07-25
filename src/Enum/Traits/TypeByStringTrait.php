@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Enum\Traits;
 
-use App\Enum\OrderStatusEnum;
 use App\Exception\UnknownEnumTypeException;
 
 trait TypeByStringTrait
@@ -15,7 +16,7 @@ trait TypeByStringTrait
         try {
             return self::from($type);
         } catch (\ValueError) {
-            throw new UnknownEnumTypeException('Unknown enum type: '.$type.' for enum: '.self::class);
+            throw new UnknownEnumTypeException('Unknown enum type: ' . $type . ' for enum: ' . self::class);
         }
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Factory\Entity;
 
 use App\Entity\Order;
@@ -10,7 +12,8 @@ use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 /**
  * @extends PersistentProxyObjectFactory<Order>
  */
-final class OrderFactory extends PersistentProxyObjectFactory{
+final class OrderFactory extends PersistentProxyObjectFactory
+{
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
@@ -25,12 +28,13 @@ final class OrderFactory extends PersistentProxyObjectFactory{
         return Order::class;
     }
 
-        /**
+    /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#model-factories
      *
      * @todo add your default values here
      */
-    protected function defaults(): array|callable    {
+    protected function defaults(): array|callable
+    {
         return [
             'deliveryType' => self::faker()->randomElement(DeliveryTypeEnum::cases()),
             'orderStatus' => self::faker()->randomElement(OrderStatusEnum::cases()),
@@ -39,7 +43,7 @@ final class OrderFactory extends PersistentProxyObjectFactory{
         ];
     }
 
-        /**
+    /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#initialization
      */
     protected function initialize(): static

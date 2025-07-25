@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Doctrine\Type;
 
 use App\Message\Product\Measurement;
@@ -8,7 +10,7 @@ use Doctrine\DBAL\Types\JsonType;
 
 class MeasurementType extends JsonType
 {
-    const NAME = 'measurement';
+    public const NAME = 'measurement';
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform): ?string
     {

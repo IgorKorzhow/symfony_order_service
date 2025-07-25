@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\EventSubscriber\OnKernelException;
 
 use App\Exception\AuthService\AuthServiceUnauthorizedException;

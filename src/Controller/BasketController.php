@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Dto\Mappers\Basket\BasketDtoMapper;
@@ -19,8 +21,7 @@ final class BasketController extends AbstractController
     public function __construct(
         private readonly ProductRepository $productRepository,
         private readonly BasketServiceInterface $basketService,
-    )
-    {
+    ) {
     }
 
     /**
@@ -45,8 +46,7 @@ final class BasketController extends AbstractController
         #[MapRequestPayload]
         BasketChangeProductRequestDto $requestDto,
         BasketDtoMapper $basketDtoMapper,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $basket = $this->basketService->getBasket($this->getUser()->getId());
 
         $product = $this->productRepository->findOneBy(['id' => $requestDto->productId]);

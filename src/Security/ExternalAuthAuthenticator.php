@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Security;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -28,7 +30,7 @@ class ExternalAuthAuthenticator extends AbstractAuthenticator
         $token = $request->headers->get('Authorization');
 
         return new SelfValidatingPassport(
-            new UserBadge($token, function($token) {
+            new UserBadge($token, function ($token) {
                 return $this->userProvider->loadUserByIdentifier($token);
             })
         );

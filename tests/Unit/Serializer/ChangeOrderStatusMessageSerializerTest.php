@@ -1,17 +1,17 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Serializer;
 
 use App\Enum\OrderStatusEnum;
 use App\Factory\Message\ChangeOrderStatusMessageFactory;
 use App\Message\Order\ChangeOrderStatusMessage;
 use App\Serializer\ChangeOrderStatusMessageSerializer;
-use DateTimeImmutable;
 use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
-use InvalidArgumentException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class ChangeOrderStatusMessageSerializerTest extends TestCase
@@ -33,7 +33,7 @@ class ChangeOrderStatusMessageSerializerTest extends TestCase
         $message = new ChangeOrderStatusMessage(
             orderId: 1,
             status: OrderStatusEnum::PAYED->value,
-            payedAt: new DateTimeImmutable(),
+            payedAt: new \DateTimeImmutable(),
         );
 
         $envelope = new Envelope($message);
@@ -51,7 +51,7 @@ class ChangeOrderStatusMessageSerializerTest extends TestCase
     {
         $envelope = new Envelope(new \stdClass());
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->serializer->encode($envelope);
     }
 
@@ -60,7 +60,7 @@ class ChangeOrderStatusMessageSerializerTest extends TestCase
         $data = [
             'orderId' => 1,
             'status' => OrderStatusEnum::PAYED->value,
-            'payedAt' => (new DateTimeImmutable())->format('Y-m-d'),
+            'payedAt' => (new \DateTimeImmutable())->format('Y-m-d'),
         ];
 
         $json = json_encode($data);
@@ -68,7 +68,7 @@ class ChangeOrderStatusMessageSerializerTest extends TestCase
         $changeOrderStatusMessage = new ChangeOrderStatusMessage(
             orderId: 1,
             status: OrderStatusEnum::PAYED->value,
-            payedAt: new DateTimeImmutable(),
+            payedAt: new \DateTimeImmutable(),
         );
 
         $envelope = $this->serializer->decode(['body' => $json]);

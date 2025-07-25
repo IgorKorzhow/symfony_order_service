@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Feature\Product;
 
 use App\Factory\Entity\ProductFactory;
@@ -94,9 +96,9 @@ final class ProductControllerIndexTest extends WebTestCase
                             'tax' => 15,
                             'version' => 1,
                         ],
-                    ]
+                    ],
                 ],
-            ]
+            ],
         ];
     }
 

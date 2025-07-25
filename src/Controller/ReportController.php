@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Dto\RequestDto\Report\ReportOrderGenerationRequestDto;
@@ -17,8 +19,7 @@ final class ReportController extends AbstractController
 {
     public function __construct(
         private readonly ReportService $reportService,
-    )
-    {
+    ) {
     }
 
     /**
@@ -28,9 +29,8 @@ final class ReportController extends AbstractController
     #[Route('/api/report/order-generation', name: 'report', methods: ['POST'])]
     public function orderReportGeneration(
         #[MapRequestPayload]
-        ReportOrderGenerationRequestDto $requestDto
-    ): JsonResponse
-    {
+        ReportOrderGenerationRequestDto $requestDto,
+    ): JsonResponse {
         $report = $this->reportService->orderReportGeneration($requestDto);
 
         return new JsonResponse(

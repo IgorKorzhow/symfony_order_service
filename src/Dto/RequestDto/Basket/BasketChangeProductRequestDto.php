@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto\RequestDto\Basket;
 
 use App\Entity\Product;
@@ -17,7 +19,6 @@ class BasketChangeProductRequestDto
         #[Assert\NotBlank]
         #[Groups(['json'])]
         public int $count,
-    )
-    {
+    ) {
     }
 }

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Inspectors;
 
 use App\Entity\Order;
@@ -11,8 +13,7 @@ readonly class OrderInspector
 {
     public function __construct(
         private AuthorizationCheckerInterface $authChecker,
-    )
-    {
+    ) {
     }
 
     public function canChangeAdminOrderStatus(): bool

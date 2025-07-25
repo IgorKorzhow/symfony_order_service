@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Controller;
 
 use App\Dto\Mappers\Product\ProductDtoMapper;
 use App\Dto\RequestDto\Product\ProductIndexRequestDto;
 use App\Dto\ResponseDto\PaginatedListEntityResponseDto;
 use App\Repository\ProductRepository;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,20 +18,18 @@ final class ProductController extends AbstractController
 {
     public function __construct(
         private readonly ProductRepository $repository,
-    )
-    {
+    ) {
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     #[Route('/api/products', name: 'products')]
     public function index(
         #[MapQueryString]
         ProductIndexRequestDto $requestDto,
         ProductDtoMapper $productDtoMapper,
-    ): JsonResponse
-    {
+    ): JsonResponse {
         $paginatedEntityData = $this->repository->getPaginated($requestDto->page, $requestDto->perPage);
 
         return new JsonResponse(
@@ -39,7 +38,7 @@ final class ProductController extends AbstractController
                 perPage: $paginatedEntityData->getPerPage(),
                 total: $paginatedEntityData->getTotal(),
                 data: $productDtoMapper->arrayEntityToDto($paginatedEntityData->getData()),
-                totalPages:  $paginatedEntityData->getTotalPages(),
+                totalPages: $paginatedEntityData->getTotalPages(),
             ),
             status: Response::HTTP_OK
         );

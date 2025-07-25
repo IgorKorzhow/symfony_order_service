@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Serializer;
 
 use App\Factory\Message\ReportGeneratedMessageFactory;
@@ -20,7 +22,7 @@ readonly class ReportGeneratedMessageSerializer implements SerializerInterface
         $data = json_decode($encodedEnvelope['body'], true);
 
         if (!$data) {
-            throw new MessageDecodingFailedException('Invalid report generated message format: '.json_encode($encodedEnvelope));
+            throw new MessageDecodingFailedException('Invalid report generated message format: ' . json_encode($encodedEnvelope));
         }
 
         return new Envelope($this->reportGeneratedMessageFactory->fromArray($data));

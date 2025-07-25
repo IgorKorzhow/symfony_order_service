@@ -1,13 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Factory\Message;
 
 use App\Entity\Order;
 use App\Enum\OrderStatusEnum;
 use App\Message\Order\ChangeOrderStatusMessage;
 use App\Validator\ExistsEntityByField;
-use DateTimeImmutable;
-use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -18,7 +18,7 @@ readonly class ChangeOrderStatusMessageFactory
     }
 
     /**
-     * @throws Exception
+     * @throws \Exception
      */
     public function fromArray(array $data): ChangeOrderStatusMessage
     {
@@ -27,7 +27,7 @@ readonly class ChangeOrderStatusMessageFactory
         return new ChangeOrderStatusMessage(
             orderId: $data['orderId'],
             status: $data['status'],
-            payedAt: isset($data['payedAt']) ? new DateTimeImmutable($data['payedAt']) : null,
+            payedAt: isset($data['payedAt']) ? new \DateTimeImmutable($data['payedAt']) : null,
         );
     }
 

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Serializer;
 
 use App\Enum\ReportStatusEnum;
@@ -10,7 +12,6 @@ use PHPUnit\Framework\MockObject\Exception;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\Exception\MessageDecodingFailedException;
-use InvalidArgumentException;
 use Symfony\Component\Uid\Uuid;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -24,7 +25,6 @@ class ReportGeneratedMessageSerializerTest extends TestCase
      */
     protected function setUp(): void
     {
-
         $this->factory = new ReportGeneratedMessageFactory($this->createMock(ValidatorInterface::class));
         $this->serializer = new ReportGeneratedMessageSerializer($this->factory);
     }
@@ -53,7 +53,7 @@ class ReportGeneratedMessageSerializerTest extends TestCase
     {
         $envelope = new Envelope(new \stdClass());
 
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(\InvalidArgumentException::class);
         $this->serializer->encode($envelope);
     }
 

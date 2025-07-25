@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Service\Basket;
@@ -6,7 +7,6 @@ namespace App\Service\Basket;
 use App\Entity\Basket;
 use App\Entity\BasketProduct;
 use App\Exception\Basket\ProductDoesntExistsException;
-use Exception;
 use Psr\Cache\InvalidArgumentException;
 use Symfony\Contracts\Cache\CacheInterface;
 
@@ -27,12 +27,12 @@ final class BasketInCacheService implements BasketServiceInterface
     {
         $basketKey = $this->getBasketKey($userId);
 
-        return $this->cache->get($basketKey, fn() => new Basket(userId: $userId), self::CACHE_TTL);
+        return $this->cache->get($basketKey, fn () => new Basket(userId: $userId), self::CACHE_TTL);
     }
 
     /**
      * @throws InvalidArgumentException
-     * @throws Exception
+     * @throws \Exception
      */
     public function addProduct(Basket $basket, BasketProduct $basketProduct): Basket
     {
@@ -45,16 +45,16 @@ final class BasketInCacheService implements BasketServiceInterface
         $res = $this->cache->delete($basketKey);
 
         if (!$res) {
-            throw new Exception('Cannot delete basket form cache. Basket_key:' . $basketKey);
+            throw new \Exception('Cannot delete basket form cache. Basket_key:' . $basketKey);
         }
 
-        return $this->cache->get($basketKey, fn() => $basket, self::CACHE_TTL);
+        return $this->cache->get($basketKey, fn () => $basket, self::CACHE_TTL);
     }
 
     /**
      * @throws ProductDoesntExistsException
      * @throws InvalidArgumentException
-     * @throws Exception
+     * @throws \Exception
      */
     public function updateProduct(Basket $basket, BasketProduct $basketProduct): Basket
     {
@@ -67,15 +67,15 @@ final class BasketInCacheService implements BasketServiceInterface
         $res = $this->cache->delete($basketKey);
 
         if (!$res) {
-            throw new Exception('Cannot delete basket form cache. Basket_key:' . $basketKey);
+            throw new \Exception('Cannot delete basket form cache. Basket_key:' . $basketKey);
         }
 
-        return $this->cache->get($basketKey, fn() => $basket, self::CACHE_TTL);
+        return $this->cache->get($basketKey, fn () => $basket, self::CACHE_TTL);
     }
 
     /**
      * @throws InvalidArgumentException
-     * @throws Exception
+     * @throws \Exception
      */
     public function deleteProduct(Basket $basket, BasketProduct $basketProduct): Basket
     {
@@ -88,15 +88,15 @@ final class BasketInCacheService implements BasketServiceInterface
         $res = $this->cache->delete($basketKey);
 
         if (!$res) {
-            throw new Exception('Cannot delete basket form cache. Basket_key:' . $basketKey);
+            throw new \Exception('Cannot delete basket form cache. Basket_key:' . $basketKey);
         }
 
-        return $this->cache->get($basketKey, fn() => $basket, self::CACHE_TTL);
+        return $this->cache->get($basketKey, fn () => $basket, self::CACHE_TTL);
     }
 
     /**
      * @throws InvalidArgumentException
-     * @throws Exception
+     * @throws \Exception
      */
     public function changeProduct(Basket $basket, BasketProduct $basketProduct): Basket
     {
@@ -109,10 +109,10 @@ final class BasketInCacheService implements BasketServiceInterface
         $res = $this->cache->delete($basketKey);
 
         if (!$res) {
-            throw new Exception('Cannot delete basket form cache. Basket_key:' . $basketKey);
+            throw new \Exception('Cannot delete basket form cache. Basket_key:' . $basketKey);
         }
 
-        return $this->cache->get($basketKey, fn() => $basket, self::CACHE_TTL);
+        return $this->cache->get($basketKey, fn () => $basket, self::CACHE_TTL);
     }
 
     private function getBasketKey(int|string $userId): string

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Message\Product;
 
 use Symfony\Component\Messenger\Attribute\AsMessage;
@@ -8,12 +10,12 @@ use Symfony\Component\Messenger\Attribute\AsMessage;
 class ProductMessage
 {
     public function __construct(
-        private int        $id,
-        private string     $name,
-        private ?string    $description,
-        private int        $cost,
-        private int        $tax,
-        private int        $version,
+        private int $id,
+        private string $name,
+        private ?string $description,
+        private int $cost,
+        private int $tax,
+        private int $version,
         public Measurement $measurements,
     ) {
     }
@@ -88,4 +90,3 @@ class ProductMessage
         $this->measurements = $measurements;
     }
 }
-

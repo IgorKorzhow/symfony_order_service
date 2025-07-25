@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Tests\Unit\Service;
 
 use App\Entity\Basket;
@@ -31,6 +33,7 @@ class BasketInCacheServiceTest extends TestCase
                 $basketKey,
                 $this->callback(function ($callback) use ($userId) {
                     $basket = $callback();
+
                     return $basket instanceof Basket
                         && $basket->userId === $userId
                         && empty($basket->products);
@@ -62,6 +65,7 @@ class BasketInCacheServiceTest extends TestCase
                 $basketKey,
                 $this->callback(function ($callback) use ($product) {
                     $basket = $callback();
+
                     return count($basket->products) === 1
                         && $basket->products[0]->productId === $product->productId
                         && $basket->totalPrice === 20.0;
@@ -77,6 +81,7 @@ class BasketInCacheServiceTest extends TestCase
         $this->assertCount(1, $result->products);
         $this->assertEquals(20.0, $result->totalPrice);
     }
+
     public function testUpdateProduct(): void
     {
         $userId = 123;
@@ -98,6 +103,7 @@ class BasketInCacheServiceTest extends TestCase
                 $this->callback(function ($callback) use ($updatedProduct) {
                     $basket = $callback();
                     $product = $basket->products[0];
+
                     return $product->count === $updatedProduct->count
                         && $basket->totalPrice === 45.0;
                 }),
@@ -131,6 +137,7 @@ class BasketInCacheServiceTest extends TestCase
                 $basketKey,
                 $this->callback(function ($callback) {
                     $basket = $callback();
+
                     return count($basket->products) === 0
                         && $basket->totalPrice === 0.0;
                 }),
@@ -162,8 +169,9 @@ class BasketInCacheServiceTest extends TestCase
             ->method('get')
             ->with(
                 $basketKey,
-                $this->callback(function ($callback) use ($product) {
+                $this->callback(function ($callback) {
                     $basket = $callback();
+
                     return count($basket->products) === 1
                         && $basket->totalPrice === 20.0;
                 }),

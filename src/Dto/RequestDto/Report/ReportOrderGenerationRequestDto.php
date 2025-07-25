@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto\RequestDto\Report;
 
 use App\Enum\ReportTypeEnum;
@@ -21,7 +23,6 @@ class ReportOrderGenerationRequestDto
         #[Assert\Type('\DateTimeImmutable')]
         #[Assert\GreaterThanOrEqual(propertyPath: 'dateFrom')]
         public \DateTimeImmutable $dateTo,
-    )
-    {
+    ) {
     }
 }

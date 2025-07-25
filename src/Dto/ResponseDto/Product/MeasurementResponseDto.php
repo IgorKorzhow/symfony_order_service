@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto\ResponseDto\Product;
 
 class MeasurementResponseDto
@@ -9,7 +11,6 @@ class MeasurementResponseDto
         public int $height,
         public int $width,
         public int $length,
-    )
-    {
+    ) {
     }
 }

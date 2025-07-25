@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Dto\RequestDto\Order;
 
 use App\Enum\DeliveryTypeEnum;
@@ -18,7 +20,6 @@ class OrderCreateRequestDto
             message: 'Please enter a valid Belarusian phone number, e.g. +375291234567'
         )]
         public ?string $phone,
-    )
-    {
+    ) {
     }
 }

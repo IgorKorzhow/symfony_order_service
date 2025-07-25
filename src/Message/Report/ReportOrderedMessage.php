@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Message\Report;
 
 use Symfony\Component\Messenger\Attribute\AsMessage;

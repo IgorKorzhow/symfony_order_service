@@ -1,9 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Exception\Basket;
 
-use Exception;
-
-class ProductPriceNotFoundException extends Exception
+class ProductPriceNotFoundException extends \Exception
 {
 }
